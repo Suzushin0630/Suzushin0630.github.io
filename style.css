@@ -24,8 +24,9 @@ body {
 
 /* ── Language toggle ── */
 .ja { display: none; }
-body.ja .ja { display: revert; }
 body.ja .en { display: none; }
+body.ja .ja { display: inline; }
+body.ja p.ja { display: block; }
 
 /* ── Navigation ── */
 nav {
