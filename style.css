@@ -361,6 +361,17 @@ h2 {
 
 .activity-list li::before { content: '–'; position: absolute; left: 0; color: var(--light-gray); }
 
+.activity-link {
+  color: var(--black);
+  text-decoration: none;
+  border-bottom: 1px solid var(--light-gray);
+  font-size: 0.8rem;
+  margin-left: 0.4rem;
+  transition: border-color 0.2s;
+}
+
+.activity-link:hover { border-color: var(--black); }
+
 /* ── Contact ── */
 .contact-grid {
   display: grid;
