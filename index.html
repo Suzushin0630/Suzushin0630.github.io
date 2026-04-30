@@ -9,6 +9,59 @@
 </head>
 <body>
 
+<!-- Splash Screen -->
+<div id="splash">
+  <div id="splash-name">SHIN SUZUKI</div>
+</div>
+
+<style>
+  #splash {
+    position: fixed;
+    inset: 0;
+    background-color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 1s ease;
+  }
+  #splash.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+  #splash-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(2rem, 8vw, 5rem);
+    letter-spacing: 0.3em;
+    color: #f5f0eb;
+    opacity: 0;
+    transition: opacity 1.4s ease;
+  }
+  #splash-name.visible {
+    opacity: 1;
+  }
+  body.splash-active {
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  (function () {
+    document.body.classList.add('splash-active');
+    const splash = document.getElementById('splash');
+    const name = document.getElementById('splash-name');
+
+    setTimeout(() => { name.classList.add('visible'); }, 300);
+    setTimeout(() => {
+      splash.classList.add('fade-out');
+      document.body.classList.remove('splash-active');
+    }, 2400);
+    setTimeout(() => { splash.remove(); }, 3500);
+  })();
+</script>
+
   <!-- Navigation -->
   <nav>
     <div class="nav-name">Shin SUZUKI</div>
