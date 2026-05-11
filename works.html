@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Works — Shin SUZUKI</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    .works-hero {
+      padding: 10rem 2rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .works-hero .section-label { margin-bottom: 1rem; }
+    .works-hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      letter-spacing: 0.05em;
+      color: var(--black);
+      margin-bottom: 0.5rem;
+    }
+    .works-hero p { color: var(--gray); font-size: 0.9rem; letter-spacing: 0.05em; }
+
+    .works-filter {
+      max-width: 1200px;
+      margin: 0 auto 3rem;
+      padding: 0 2rem;
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border: 1px solid var(--light-gray);
+      background: transparent;
+      color: var(--gray);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--black);
+      border-color: var(--black);
+      color: var(--white);
+    }
+
+    .works-grid {
+      max-width: 1200px;
+      margin: 0 auto 6rem;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 2.5rem;
+    }
+    .work-card { display: block; text-decoration: none; color: inherit; cursor: pointer; }
+    .work-card.no-link { cursor: default; }
+    .work-card-image {
+      width: 100%;
+      aspect-ratio: 16/10;
+      overflow: hidden;
+      background: var(--light-gray);
+      position: relative;
+    }
+    .work-card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .work-card:not(.no-link):hover .work-card-image img { transform: scale(1.04); }
+    .work-card-image .confidential-badge {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(17,17,17,0.55);
+    }
+    .confidential-badge span {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      border: 1px solid rgba(255,255,255,0.4);
+      padding: 0.35rem 0.8rem;
+    }
+    .work-card-body { padding: 1.2rem 0 0; }
+    .work-card-meta { display: flex; gap: 0.75rem; align-items: center; margin-bottom: 0.5rem; }
+    .work-year { font-family: 'Inter', sans-serif; font-size: 0.72rem; color: var(--gray); letter-spacing: 0.05em; }
+    .work-category {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gray);
+      border: 1px solid var(--light-gray);
+      padding: 0.15rem 0.5rem;
+    }
+    .work-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: 1.35rem;
+      letter-spacing: 0.02em;
+      color: var(--black);
+      margin-bottom: 0.35rem;
+      line-height: 1.3;
+    }
+    .work-card .work-subtitle { font-size: 0.78rem; color: var(--gray); letter-spacing: 0.03em; font-style: italic; }
+    .work-card .work-desc { font-size: 0.82rem; color: var(--gray); line-height: 1.65; margin-top: 0.6rem; }
+    .work-card .work-award {
+      display: inline-block;
+      margin-top: 0.75rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--gray);
+    }
+    .work-card-arrow {
+      display: inline-block;
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: var(--black);
+      border-bottom: 1px solid var(--black);
+      padding-bottom: 1px;
+      transition: opacity 0.2s;
+    }
+    .work-card:not(.no-link):hover .work-card-arrow { opacity: 0.5; }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-name"><a href="index.html" style="text-decoration:none;color:inherit;">Shin SUZUKI</a></div>
+    <ul>
+      <li><a href="index.html#about"><span class="en">About</span><span class="ja">概要</span></a></li>
+      <li><a href="index.html#history"><span class="en">History</span><span class="ja">経歴</span></a></li>
+      <li><a href="index.html#research"><span class="en">Research</span><span class="ja">研究</span></a></li>
+      <li><a href="index.html#awards"><span class="en">Awards</span><span class="ja">受賞</span></a></li>
+      <li><a href="index.html#skills">Skills</a></li>
+      <li><a href="index.html#activities"><span class="en">Activities</span><span class="ja">活動</span></a></li>
+      <li><a href="works.html" class="active"><span class="en">Works</span><span class="ja">作品</span></a></li>
+      <li><a href="index.html#contact"><span class="en">Contact</span><span class="ja">連絡先</span></a></li>
+    </ul>
+    <button id="lang-toggle" onclick="toggleLang()">日本語</button>
+  </nav>
+
+  <!-- Hero -->
+  <div class="works-hero">
+    <div class="section-label"><span class="en">Works</span><span class="ja">作品</span></div>
+    <h1><span class="en">Selected Works</span><span class="ja">作品集</span></h1>
+    <p><span class="en">Architecture · Urban Design · Competition</span><span class="ja">建築設計 · 都市設計 · コンペ</span></p>
+  </div>
+
+  <!-- Filter -->
+  <div class="works-filter">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="graduation">Graduation</button>
+    <button class="filter-btn" data-filter="competition">Competition</button>
+    <button class="filter-btn" data-filter="studio">Design Studio</button>
+    <button class="filter-btn" data-filter="internship">Internship</button>
+  </div>
+
+  <!-- Grid -->
+  <div class="works-grid">
+
+    <!-- 01 舟流都市 -->
+    <a class="work-card" href="works/funagare-toshi.html" data-category="graduation">
+      <div class="work-card-image">
+        <img src="assets/works/funagare-toshi/hero.jpg" alt="舟流都市" loading="lazy" />
+      </div>
+      <div class="work-card-body">
+        <div class="work-card-meta">
+          <span class="work-year">2022</span>
+          <span class="work-category">Graduation Design</span>
+        </div>
+        <h3><span class="en">Funagare Toshi</span><span class="ja">舟流都市</span></h3>
+        <p class="work-subtitle"><span class="en">Water and City from Sotobori</span><span class="ja">外濠から考える水と都市の向き合い方</span></p>
+        <p class="work-desc en">A proposal to revive Sotobori as infrastructure, generating new flows in Tokyo through the restoration of its waterway.</p>
+        <p class="work-desc ja">外濠をインフラとして復活させることで、東京に新しい流れを生み出す卒業設計。</p>
+        <span class="work-award"><span class="en">Special Jury Award · Design Review 70 · 卒,22 55選</span><span class="ja">特別審査員賞 · デザインレビュー70選 · 卒,22 55選</span></span>
+        <br><span class="work-card-arrow en">View project →</span><span class="work-card-arrow ja">詳細を見る →</span>
+      </div>
+    </a>
+
+    <!-- 02 のれんみつけ -->
+    <a class="work-card" href="works/noren-mitsuke.html" data-category="competition">
+      <div class="work-card-image">
+        <img src="assets/works/noren-mitsuke/hero.jpg" alt="のれんみつけ" loading="lazy" />
+      </div>
+      <div class="work-card-body">
+        <div class="work-card-meta">
+          <span class="work-year">2023</span>
+          <span class="work-category">Competition</span>
+        </div>
+        <h3><span class="en">Noren Mitsuke</span><span class="ja">のれんみつけ</span></h3>
+        <p class="work-subtitle"><span class="en">Gateway of Kagurazaka</span><span class="ja">のれんを使った神楽坂の玄関口のデザイン</span></p>
+        <p class="work-desc en">A gateway design for Kagurazaka using the noren motif, reconnecting the street's layered commercial history to its public face.</p>
+        <p class="work-desc ja">のれんをモチーフに、商業の街・神楽坂の玄関口を再デザインするコンペ提案。</p>
+        <span class="work-award"><span class="en">Excellence Award + Kagurazaka Architecture Prize</span><span class="ja">優秀賞 + 神楽坂建築賞</span></span>
+        <br><span class="work-card-arrow en">View project →</span><span class="work-card-arrow ja">詳細を見る →</span>
+      </div>
+    </a>
+
+    <!-- 03 Channeling Culture Canal -->
+    <a class="work-card" href="works/channeling-culture-canal.html" data-category="studio">
+      <div class="work-card-image">
+        <img src="assets/works/channeling-culture-canal/hero.jpg" alt="Channeling Culture Canal" loading="lazy" />
+      </div>
+      <div class="work-card-body">
+        <div class="work-card-meta">
+          <span class="work-year">2022</span>
+          <span class="work-category">Design Studio</span>
+        </div>
+        <h3>Channeling Culture Canal</h3>
+        <p class="work-subtitle"><span class="en">Shanghai International Workshop</span><span class="ja">上海国際ワークショップ</span></p>
+        <p class="work-desc en">An international group project with Swiss, Danish, and Chinese collaborators, proposing the restoration of historical canals in Qingpu District, Shanghai.</p>
+        <p class="work-desc ja">スイス・デンマーク・中国の学生と行った国際グループワーク。上海・青浦区に歴史的運河を再生する提案。</p>
+        <span class="work-card-arrow en">View project →</span><span class="work-card-arrow ja">詳細を見る →</span>
+      </div>
+    </a>
+
+    <!-- 04 NL architects Internship -->
+    <div class="work-card no-link" data-category="internship">
+      <div class="work-card-image">
+        <img src="assets/works/nl-architects/hero.jpg" alt="NL architects Internship" loading="lazy" />
+        <div class="confidential-badge"><span>Confidential</span></div>
+      </div>
+      <div class="work-card-body">
+        <div class="work-card-meta">
+          <span class="work-year">2023 – 2024</span>
+          <span class="work-category">Internship</span>
+        </div>
+        <h3>NL architects</h3>
+        <p class="work-subtitle"><span class="en">Amsterdam, Netherlands</span><span class="ja">オランダ・アムステルダム</span></p>
+        <p class="work-desc en">Worked on residential competitions, facade design, and construction documentation. Project details are confidential.</p>
+        <p class="work-desc ja">集合住宅コンペ、ファサードデザイン、実施設計などに従事。プロジェクト詳細は企業秘密につき非公開。</p>
+        <span class="work-award"><span class="en">Categories: Competition / Construction / Facade</span><span class="ja">担当：コンペ / 実施設計 / ファサード</span></span>
+      </div>
+    </div>
+
+    <!-- 05 小学校課題 -->
+    <a class="work-card" href="works/elementary-school.html" data-category="studio">
+      <div class="work-card-image">
+        <img src="assets/works/elementary-school/hero.jpg" alt="小学校課題" loading="lazy" />
+      </div>
+      <div class="work-card-body">
+        <div class="work-card-meta">
+          <span class="work-year">2020</span>
+          <span class="work-category">Design Studio</span>
+        </div>
+        <h3><span class="en">Tsukuru, Tsunagaru</span><span class="ja">つくる、つながる。</span></h3>
+        <p class="work-subtitle"><span class="en">Elementary School as Community Core</span><span class="ja">ものづくりがもたらすコミュニティ・コア</span></p>
+        <p class="work-desc en">An elementary school design in Edogawa, Tokyo, weaving together a town-factory district and the school as a shared community core.</p>
+        <p class="work-desc ja">東京都江戸川区の町工場地帯に根ざした、ものづくりを媒介とするコミュニティの核としての小学校設計。</p>
+        <span class="work-award"><span class="en">Excellent Work Award · Published in Department Journal</span><span class="ja">学内優秀賞 · 学内誌掲載</span></span>
+        <br><span class="work-card-arrow en">View project →</span><span class="work-card-arrow ja">詳細を見る →</span>
+      </div>
+    </a>
+
+    <!-- 06 集合住宅課題 -->
+    <a class="work-card" href="works/collective-housing.html" data-category="studio">
+      <div class="work-card-image">
+        <img src="assets/works/collective-housing/hero.jpg" alt="集合住宅課題" loading="lazy" />
+      </div>
+      <div class="work-card-body">
+        <div class="work-card-meta">
+          <span class="work-year">2020</span>
+          <span class="work-category">Design Studio</span>
+        </div>
+        <h3><span class="en">Nagarete, Tamaru</span><span class="ja">ながれて、たまる。</span></h3>
+        <p class="work-subtitle"><span class="en">A Large House Sharing Time and Space</span><span class="ja">時間と空間を共有する大きな家</span></p>
+        <p class="work-desc en">A collective housing proposal responding to post-COVID life, designing a large shared house along a culverted river in Tokyo.</p>
+        <p class="work-desc ja">アフターコロナを見据え、暗渠に沿って人々の流れと活動が重なる大きな共有住宅を提案。</p>
+        <span class="work-award"><span class="en">Excellent Work Award</span><span class="ja">学内優秀賞</span></span>
+        <br><span class="work-card-arrow en">View project →</span><span class="work-card-arrow ja">詳細を見る →</span>
+      </div>
+    </a>
+
+  </div>
+
+  <footer>
+    <p>© 2026 Shin SUZUKI</p>
+  </footer>
+
+  <script>
+    // Filter
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.work-card');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        cards.forEach(card => {
+          card.style.display = (filter === 'all' || card.dataset.category === filter) ? '' : 'none';
+        });
+      });
+    });
+
+    // Language toggle (same as index.html)
+    function setLang(isJa) {
+      document.querySelectorAll('.en').forEach(el => { el.style.display = isJa ? 'none' : ''; });
+      document.querySelectorAll('.ja').forEach(el => {
+        if (isJa) { el.style.display = el.tagName === 'P' ? 'block' : 'inline'; }
+        else { el.style.display = 'none'; }
+      });
+      document.getElementById('lang-toggle').textContent = isJa ? 'English' : '日本語';
+    }
+    function toggleLang() {
+      const isJa = !document.body.classList.contains('ja');
+      document.body.classList.toggle('ja', isJa);
+      localStorage.setItem('lang', isJa ? 'ja' : 'en');
+      setLang(isJa);
+    }
+    if (localStorage.getItem('lang') === 'ja') {
+      document.body.classList.add('ja');
+      setLang(true);
+    }
+  </script>
+
+</body>
+</html>
