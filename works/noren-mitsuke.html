@@ -7,6 +7,122 @@
   <link rel="stylesheet" href="../style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="work-detail.css" />
+  <style>
+    /* Slideshow viewer */
+    .slide-viewer {
+      background: #111;
+      padding: 3rem 0;
+      margin-bottom: 4rem;
+    }
+    .slide-viewer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+    .slide-viewer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .slide-viewer-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+    .slide-counter {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.1em;
+    }
+    .slide-main {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1190/842;
+      background: #000;
+      overflow: hidden;
+    }
+    .slide-main img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: none;
+    }
+    .slide-main img.active { display: block; }
+    .slide-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #fff;
+      font-size: 1.4rem;
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      z-index: 10;
+    }
+    .slide-btn:hover { background: rgba(255,255,255,0.25); }
+    .slide-btn.prev { left: 0.75rem; }
+    .slide-btn.next { right: 0.75rem; }
+    .slide-thumbs {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 1rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.2) transparent;
+    }
+    .slide-thumb {
+      flex-shrink: 0;
+      width: 72px;
+      height: 51px;
+      overflow: hidden;
+      cursor: pointer;
+      opacity: 0.45;
+      transition: opacity 0.2s;
+      border: 1px solid transparent;
+    }
+    .slide-thumb:hover { opacity: 0.8; }
+    .slide-thumb.active { opacity: 1; border-color: rgba(255,255,255,0.6); }
+    .slide-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .slide-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .slide-action-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.5rem 1.2rem;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.75);
+      transition: all 0.2s;
+      cursor: pointer;
+      background: transparent;
+    }
+    .slide-action-btn:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.6);
+      color: #fff;
+    }
+  </style>
 </head>
 <body>
 
@@ -22,7 +138,7 @@
   </nav>
 
   <div class="work-hero">
-    <img src="../assets/works/noren-mitsuke/hero.jpg" alt="のれんみつけ" />
+    <img src="../assets/works/noren-mitsuke/slide-01.jpg" alt="のれんみつけ" />
     <div class="work-hero-overlay">
       <div class="work-hero-text">
         <span class="work-tag">2023 · Competition</span>
@@ -35,9 +151,28 @@
   <div class="work-body">
     <div class="work-intro">
       <div class="work-meta-block">
-        <div class="meta-row"><span class="meta-key"><span class="en">Year</span><span class="ja">制作年</span></span><span class="meta-val">2023</span></div>
-        <div class="meta-row"><span class="meta-key"><span class="en">Type</span><span class="ja">種別</span></span><span class="meta-val"><span class="en">Competition</span><span class="ja">コンペティション</span></span></div>
-        <div class="meta-row"><span class="meta-key"><span class="en">Competition</span><span class="ja">コンペ名</span></span><span class="meta-val"><span class="en">Shinjuku Mirai Idea Competition "Noren Mitsuke"</span><span class="ja">新宿みらいアイディアコンペティション「のれんみつけ」</span></span></div>
+        <div class="meta-row">
+          <span class="meta-key"><span class="en">Year</span><span class="ja">制作年</span></span>
+          <span class="meta-val">2023</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-key"><span class="en">Type</span><span class="ja">種別</span></span>
+          <span class="meta-val"><span class="en">Competition</span><span class="ja">コンペティション</span></span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-key"><span class="en">Competition</span><span class="ja">コンペ名</span></span>
+          <span class="meta-val">
+            <span class="en">Shinjuku Mirai Idea Competition "Noren Mitsuke"</span>
+            <span class="ja">新宿みらいアイディアコンペティション「のれんみつけ」</span>
+          </span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-key"><span class="en">Site</span><span class="ja">対象地</span></span>
+          <span class="meta-val">
+            <span class="en">Iidabashi / Kagurazaka, Shinjuku-ku, Tokyo</span>
+            <span class="ja">東京都新宿区 飯田橋・神楽坂周辺</span>
+          </span>
+        </div>
         <div class="meta-row awards-row">
           <span class="meta-key"><span class="en">Awards</span><span class="ja">受賞</span></span>
           <span class="meta-val">
@@ -52,39 +187,64 @@
       <div class="work-description">
         <h2><span class="en">Overview</span><span class="ja">概要</span></h2>
         <p class="en">
-          Kagurazaka is known as a street of restaurants, bars, and cultural establishments — its character shaped by the noren (fabric dividers) that hang at the entrances of each shop. Yet the gateway to this street, the area around JR Iidabashi Station, lacks the presence and identity that the street itself possesses.
+          Kagurazaka is a street layered with history — once a geisha district, a loading dock along the Sotobori waterway, and now a dense commercial area. Yet this history is hidden behind the "noren" of commerce: the shops, signage, and facades that have overtaken the street's original character.
         </p>
         <p class="ja">
-          神楽坂は飲食店や文化施設が立ち並ぶ街として知られ、その入口にはそれぞれの店ののれんが個性を語る。しかし、JR飯田橋駅からのアプローチ部分は、神楽坂らしい存在感や空間的な入口（＝見付）として機能していない。
+          神楽坂は、花街・荷揚場・外濠の水辺など多層的な歴史を持つ街である。しかしその本来の姿は、商業というのれんの裏に隠れてしまっている。
         </p>
         <p class="en">
-          This proposal reimagines the gateway as a sequence of three "mitsuke" — threshold moments — each marked by a noren-like architectural element that signals entry, filters views, and reveals the layers of Kagurazaka's history behind the commercial facade.
+          This proposal reimagines the approach from JR Iidabashi Station as a sequence of three "mitsuke" — threshold moments — each using the noren as an architectural device that peels back the commercial layer to reveal the layered history beneath.
         </p>
         <p class="ja">
-          本提案は、神楽坂への入口を三つの「みつけ」として再編する。のれんを建築的エレメントとして用い、商業というのれんの裏に隠れた神楽坂本来の姿を段階的に顕在化させていく空間シークエンスを設計した。
+          本提案は、JR飯田橋駅からのアプローチを三つの「みつけ」として再編する。のれんという建築的操作によって商業の層を剥がし、その奥に眠る神楽坂の歴史的文脈を段階的に顕在化させる。
         </p>
 
         <h2><span class="en">Three Gateways</span><span class="ja">三つのみつけ</span></h2>
         <p class="en">
-          <strong>Kaguramitsuke</strong> — at the intersection near JR Iidabashi, a street-level library and shared space anchors the corner.<br />
-          <strong>Iidamitsuke</strong> — along the Sotobori waterfront, a rest stop and rental cycle station activates the moat edge.<br />
-          <strong>Kagura Library</strong> — a resource space weaving local history into an accessible public program.
+          <strong>① Kaguramitsuke</strong> — At the main intersection, a street-level shared library and open plaza anchors the corner, creating the first threshold into Kagurazaka's world.<br /><br />
+          <strong>② Iidamitsuke</strong> — Along the Sotobori waterfront, a rest stop and rental cycle station activates the moat's edge, connecting the urban flow to the water below.<br /><br />
+          <strong>③ Kagura Library</strong> — Deeper in, a resource space woven with local archival material makes the layered history of the district physically accessible.
         </p>
         <p class="ja">
-          <strong>かぐらみつけ</strong> — JR飯田橋駅交差点に、ストリートレベルのライブラリー・共有空間を配置。<br />
-          <strong>いいだみつけ</strong> — 外濠沿いに休憩所・レンタルサイクルを設け、水辺のエッジを活性化。<br />
-          <strong>かぐらいぶらりー</strong> — 地域の歴史を紡ぐ資料・交流空間。
+          <strong>① かぐらみつけ</strong> — メイン交差点にストリートレベルのシェアライブラリーと広場を配置し、神楽坂世界への最初の入口をつくる。<br /><br />
+          <strong>② いいだみつけ</strong> — 外濠の水辺沿いに休憩所・レンタルサイクルを設け、都市の流れと水辺を繋ぐ。<br /><br />
+          <strong>③ かぐらいぶらりー</strong> — 奥に進むと、地域の記録資料を織り込んだ空間が現れ、この街の重層的な歴史に身体的に触れることができる。
         </p>
       </div>
     </div>
+  </div>
 
-    <div class="work-gallery">
-      <div class="gallery-full">
-        <img src="../assets/works/noren-mitsuke/full-sheet.jpg" alt="のれんみつけ 作品シート" loading="lazy" />
-        <p class="gallery-caption"><span class="en">Full presentation sheet</span><span class="ja">作品シート（右半分）</span></p>
+  <!-- Presentation Slideshow -->
+  <div class="slide-viewer">
+    <div class="slide-viewer-inner">
+      <div class="slide-viewer-header">
+        <span class="slide-viewer-title">
+          <span class="en">Presentation Slides — Full 24 pages</span>
+          <span class="ja">プレゼンテーション — 全24ページ</span>
+        </span>
+        <span class="slide-counter"><span id="current-slide">1</span> / 24</span>
+      </div>
+
+      <div class="slide-main" id="slide-main">
+        <button class="slide-btn prev" onclick="changeSlide(-1)">&#8249;</button>
+        <button class="slide-btn next" onclick="changeSlide(1)">&#8250;</button>
+        <!-- slides injected by JS -->
+      </div>
+
+      <div class="slide-thumbs" id="slide-thumbs"></div>
+
+      <div class="slide-actions">
+        <a class="slide-action-btn" href="../assets/works/noren-mitsuke/noren-mitsuke-presentation.pdf" target="_blank">
+          <span class="en">Open PDF ↗</span><span class="ja">PDFを開く ↗</span>
+        </a>
+        <a class="slide-action-btn" href="../assets/works/noren-mitsuke/noren-mitsuke-presentation.pdf" download>
+          <span class="en">Download PDF</span><span class="ja">PDFをダウンロード</span>
+        </a>
       </div>
     </div>
+  </div>
 
+  <div class="work-body" style="padding-top:0">
     <div class="work-nav">
       <a href="funagare-toshi.html" class="back-link">← <span class="en">Prev: Funagare Toshi</span><span class="ja">前：舟流都市</span></a>
       <a href="channeling-culture-canal.html" class="next-link"><span class="en">Next: Channeling Culture Canal</span><span class="ja">次：Channeling Culture Canal</span> →</a>
@@ -94,6 +254,53 @@
   <footer><p>© 2026 Shin SUZUKI</p></footer>
 
   <script>
+    // Build slides
+    const total = 24;
+    const main = document.getElementById('slide-main');
+    const thumbs = document.getElementById('slide-thumbs');
+    let current = 0;
+
+    for (let i = 1; i <= total; i++) {
+      const n = String(i).padStart(2, '0');
+      const src = `../assets/works/noren-mitsuke/slide-${n}.jpg`;
+
+      // main image
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = `Slide ${i}`;
+      if (i === 1) img.classList.add('active');
+      main.appendChild(img);
+
+      // thumbnail
+      const thumb = document.createElement('div');
+      thumb.className = 'slide-thumb' + (i === 1 ? ' active' : '');
+      thumb.innerHTML = `<img src="${src}" alt="Slide ${i}" loading="lazy">`;
+      thumb.addEventListener('click', () => goToSlide(i - 1));
+      thumbs.appendChild(thumb);
+    }
+
+    function goToSlide(idx) {
+      const imgs = main.querySelectorAll('img');
+      const tbs = thumbs.querySelectorAll('.slide-thumb');
+      imgs[current].classList.remove('active');
+      tbs[current].classList.remove('active');
+      current = (idx + total) % total;
+      imgs[current].classList.add('active');
+      tbs[current].classList.add('active');
+      document.getElementById('current-slide').textContent = current + 1;
+      // scroll thumbnail into view
+      tbs[current].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+
+    function changeSlide(dir) { goToSlide(current + dir); }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') changeSlide(1);
+      if (e.key === 'ArrowLeft') changeSlide(-1);
+    });
+
+    // Language toggle
     function setLang(isJa) {
       document.querySelectorAll('.en').forEach(el => { el.style.display = isJa ? 'none' : ''; });
       document.querySelectorAll('.ja').forEach(el => {
