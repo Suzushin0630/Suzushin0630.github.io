@@ -157,6 +157,45 @@
   font-style: italic;
 }
 
+/* Lightbox */
+#lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(17,17,17,0.92);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+}
+#lightbox.active { display: flex; }
+#lightbox img {
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  position: static;
+  transform: none;
+  cursor: default;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+#lightbox-close {
+  position: fixed;
+  top: 1.2rem;
+  right: 1.8rem;
+  color: rgba(255,255,255,0.7);
+  font-size: 2.2rem;
+  line-height: 1;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  user-select: none;
+}
+#lightbox-close:hover { color: #fff; }
+
 /* Nav */
 .work-nav {
   display: flex;
