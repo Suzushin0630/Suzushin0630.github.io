@@ -1,5 +1,41 @@
-/* work-detail.js — parallax, lightbox, image protection */
+/* work-detail.js — parallax, lightbox, image protection, nav, cursor, progress */
 (function () {
+  'use strict';
+
+  /* ── Scroll progress ── */
+  var prog = document.getElementById('progress');
+  if (prog) {
+    window.addEventListener('scroll', function () {
+      prog.style.width = Math.min(
+        window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100, 100
+      ) + '%';
+    }, { passive: true });
+  }
+
+  /* ── Custom cursor ── */
+  var cur = document.getElementById('cursor');
+  if (cur) {
+    document.addEventListener('mousemove', function (e) {
+      cur.style.left = e.clientX + 'px';
+      cur.style.top  = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button').forEach(function (el) {
+      el.addEventListener('mouseenter', function () { cur.classList.add('hover'); });
+      el.addEventListener('mouseleave', function () { cur.classList.remove('hover'); });
+    });
+  }
+
+  /* ── Hamburger / mobile nav ── */
+  var ham    = document.getElementById('hamburger');
+  var mobNav = document.getElementById('mobile-nav');
+  if (ham && mobNav) {
+    ham.addEventListener('click', function () {
+      var open = mobNav.classList.toggle('open');
+      ham.classList.toggle('open', open);
+      ham.setAttribute('aria-expanded', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+  }
 
   /* ── Parallax on hero image ── */
   var hero    = document.querySelector('.work-hero');
@@ -26,8 +62,7 @@
   document.body.appendChild(lb);
 
   function openLightbox(src, alt) {
-    lbImg.src = src;
-    lbImg.alt = alt || '';
+    lbImg.src = src; lbImg.alt = alt || '';
     lb.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
@@ -46,7 +81,7 @@
   lb.addEventListener('click', function (e) { if (e.target === lb) closeLightbox(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLightbox(); });
 
-  /* ── Image protection (right-click / drag) ── */
+  /* ── Image protection ── */
   document.addEventListener('contextmenu', function (e) {
     if (e.target.tagName === 'IMG') e.preventDefault();
   });

@@ -4,22 +4,44 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>舟流都市 — Shin SUZUKI</title>
-  <link rel="stylesheet" href="../style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:ital@0;1&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="work-detail.css" />
 </head>
 <body>
 
-  <nav>
-    <div class="nav-name"><a href="../index.html" style="text-decoration:none;color:inherit;">Shin SUZUKI</a></div>
-    <ul>
-      <li><a href="../index.html#about"><span class="en">About</span><span class="ja">概要</span></a></li>
-      <li><a href="../index.html#research"><span class="en">Research</span><span class="ja">研究</span></a></li>
-      <li><a href="../works.html" class="active"><span class="en">Works</span><span class="ja">作品</span></a></li>
-      <li><a href="../index.html#contact"><span class="en">Contact</span><span class="ja">連絡先</span></a></li>
+  <!-- Sidebar nav -->
+  <nav id="side-nav" aria-label="Main navigation">
+    <a href="../index.html" class="nav-monogram">S · S</a>
+    <ul class="nav-links">
+      <li><a href="../index.html#about" class="nav-link"><span class="nav-en">About</span><span class="nav-ja">概要</span></a></li>
+      <li><a href="../index.html#history" class="nav-link"><span class="nav-en">History</span><span class="nav-ja">経歴</span></a></li>
+      <li><a href="../index.html#research" class="nav-link"><span class="nav-en">Research</span><span class="nav-ja">研究</span></a></li>
+      <li><a href="../index.html#awards" class="nav-link"><span class="nav-en">Awards</span><span class="nav-ja">受賞</span></a></li>
+      <li><a href="../index.html#skills" class="nav-link"><span class="nav-en">Skills</span></a></li>
+      <li><a href="../index.html#activities" class="nav-link"><span class="nav-en">Activities</span><span class="nav-ja">活動</span></a></li>
+      <li><a href="../works.html" class="nav-link active"><span class="nav-en">Works ↗</span><span class="nav-ja">作品</span></a></li>
+      <li><a href="../index.html#contact" class="nav-link"><span class="nav-en">Contact</span><span class="nav-ja">連絡先</span></a></li>
     </ul>
-    <button id="lang-toggle" onclick="toggleLang()">日本語</button>
+    <button id="nav-lang" onclick="toggleLang()">日本語</button>
   </nav>
+  <div id="top-bar" aria-hidden="true"><span class="bar-name">Shin SUZUKI</span></div>
+  <button id="hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <nav id="mobile-nav" aria-label="Mobile navigation">
+    <a href="../index.html#about"><span class="en">About</span><span class="ja" style="display:none">概要</span></a>
+    <a href="../index.html#history"><span class="en">History</span><span class="ja" style="display:none">経歴</span></a>
+    <a href="../index.html#research"><span class="en">Research</span><span class="ja" style="display:none">研究</span></a>
+    <a href="../index.html#awards"><span class="en">Awards</span><span class="ja" style="display:none">受賞</span></a>
+    <a href="../index.html#skills">Skills</a>
+    <a href="../index.html#activities"><span class="en">Activities</span><span class="ja" style="display:none">活動</span></a>
+    <a href="../works.html">Works ↗</a>
+    <a href="../index.html#contact"><span class="en">Contact</span><span class="ja" style="display:none">連絡先</span></a>
+    <button id="mobile-lang" onclick="toggleLang()">日本語</button>
+  </nav>
+  <div id="progress"></div>
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+
 
   <div class="work-hero">
     <img src="../assets/works/funagare-toshi/hero.jpg" alt="舟流都市" />
@@ -161,7 +183,10 @@
         if (isJa) { el.style.display = el.tagName === 'P' ? 'block' : 'inline'; }
         else { el.style.display = 'none'; }
       });
-      document.getElementById('lang-toggle').textContent = isJa ? 'English' : '日本語';
+      ['nav-lang','mobile-lang'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = isJa ? 'EN' : '日本語';
+      });
     }
     function toggleLang() {
       const isJa = !document.body.classList.contains('ja');
