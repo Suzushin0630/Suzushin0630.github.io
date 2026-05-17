@@ -7,7 +7,7 @@
   <meta name="description" content="Shin SUZUKI — Doctoral Candidate at Institute of Science Tokyo. Architecture, Urban Research, Collaborative Planning, Netherlands.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:ital@0;1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:ital@0;1&family=DIN+2014:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
     /* ─── Variables & Reset ─────────────────────────────── */
@@ -74,10 +74,12 @@
       background: var(--bg);
     }
     .nav-monogram {
-      font-family: var(--font-mono);
-      font-size:1.1rem; letter-spacing:0.12em;
+      font-family: 'DIN 2014', var(--font-mono);
+      font-weight:300; font-size:0.82rem; letter-spacing:0.22em;
+      text-transform:uppercase;
       color: var(--ink); text-decoration:none;
       display:block; margin-bottom:3rem;
+      line-height:1;
     }
     .nav-monogram:hover { color:var(--accent); }
     .nav-links { list-style:none; flex:1; }
@@ -696,7 +698,7 @@
 
 <!-- ─── Sidebar nav ──────────────────────────────────────── -->
 <nav id="side-nav" aria-label="Main navigation">
-  <a href="#hero" class="nav-monogram">S · S</a>
+  <a href="#hero" class="nav-monogram">SHIN SUZUKI</a>
   <ul class="nav-links">
     <li>
       <a href="#about" class="nav-link">
