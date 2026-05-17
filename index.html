@@ -1,167 +1,815 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shin SUZUKI</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shin SUZUKI — Architect &amp; Researcher</title>
+  <meta name="description" content="Shin SUZUKI — Doctoral Candidate at Institute of Science Tokyo. Architecture, Urban Research, Collaborative Planning, Netherlands.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:ital@0;1&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─── Variables & Reset ─────────────────────────────── */
+    :root {
+      --bg:        #F5F3EF;
+      --ink:       #111010;
+      --ink-soft:  #4A4745;
+      --accent:    #2B3A5C;
+      --gold:      #C8A96A;
+      --rule:      rgba(17,16,16,0.12);
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-mono:    'DM Mono', 'Courier New', monospace;
+      --font-body:    'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --max-w:     1200px;
+      --nav-w:     220px;
+      --section-gap: 140px;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; font-size:16px; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ─── Grain overlay ─────────────────────────────────── */
+    body::after {
+      content:'';
+      position:fixed; inset:0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events:none; z-index:9000; opacity:0.4;
+    }
+
+    /* ─── Scroll progress bar ───────────────────────────── */
+    #progress {
+      position:fixed; top:0; left:0; height:2px; width:0%;
+      background: var(--gold); z-index:9998; pointer-events:none;
+      transition: width 0.05s linear;
+    }
+
+    /* ─── Custom cursor ─────────────────────────────────── */
+    .cursor {
+      position:fixed; width:8px; height:8px;
+      border-radius:50%; background:var(--accent);
+      pointer-events:none; z-index:9999;
+      transform:translate(-50%,-50%);
+      transition: width .3s ease, height .3s ease, background .3s ease, opacity .3s;
+      mix-blend-mode:multiply;
+      will-change:transform;
+    }
+    .cursor.hover { width:48px; height:48px; background:var(--gold); opacity:0.5; }
+
+    /* ─── Sidebar nav ───────────────────────────────────── */
+    #side-nav {
+      position:fixed; top:0; left:0; bottom:0;
+      width: var(--nav-w);
+      padding:2.5rem 2rem;
+      display:flex; flex-direction:column; justify-content:space-between;
+      z-index:800;
+      border-right:1px solid var(--rule);
+      background: var(--bg);
+    }
+    .nav-monogram {
+      font-family: var(--font-mono);
+      font-size:1.1rem; letter-spacing:0.12em;
+      color: var(--ink); text-decoration:none;
+      display:block; margin-bottom:3rem;
+    }
+    .nav-monogram:hover { color:var(--accent); }
+    .nav-links { list-style:none; flex:1; }
+    .nav-links li { margin-bottom:1.6rem; }
+    .nav-links a {
+      text-decoration:none; display:block;
+      padding-left:0.8rem;
+      border-left:2px solid transparent;
+      transition: border-color .2s, color .2s;
+    }
+    .nav-links a:hover,
+    .nav-links a.active {
+      border-left-color: var(--accent);
+      color: var(--accent);
+    }
+    .nav-en {
+      font-family: var(--font-mono);
+      font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase;
+      color: var(--ink); display:block;
+    }
+    .nav-ja {
+      font-family: var(--font-display);
+      font-style:italic; font-size:0.8rem;
+      color: var(--ink-soft); display:block; margin-top:1px;
+    }
+    .nav-works-arrow { font-size:0.6rem; vertical-align:middle; margin-left:2px; }
+    #nav-lang {
+      font-family: var(--font-mono);
+      font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase;
+      background:none; border:1px solid var(--rule);
+      color:var(--ink); padding:6px 14px; cursor:none;
+      transition: background .2s, color .2s; margin-top:2rem;
+    }
+    #nav-lang:hover { background:var(--accent); color:var(--bg); border-color:var(--accent); }
+
+    /* ─── Hamburger (mobile) ────────────────────────────── */
+    #hamburger {
+      display:none; position:fixed; top:1.2rem; right:1.4rem;
+      z-index:1100; background:none; border:none; cursor:none;
+      flex-direction:column; gap:5px; padding:4px;
+    }
+    #hamburger span {
+      display:block; width:24px; height:1.5px;
+      background:var(--ink); transition: transform .3s, opacity .3s;
+    }
+    #hamburger.open span:nth-child(1){ transform:translateY(6.5px) rotate(45deg); }
+    #hamburger.open span:nth-child(2){ opacity:0; }
+    #hamburger.open span:nth-child(3){ transform:translateY(-6.5px) rotate(-45deg); }
+    #mobile-nav {
+      display:none; position:fixed; inset:0;
+      background:var(--bg); z-index:1000;
+      flex-direction:column; align-items:center; justify-content:center; gap:2.4rem;
+    }
+    #mobile-nav.open { display:flex; }
+    #mobile-nav a {
+      font-family:var(--font-display); font-size:2rem; font-weight:300;
+      color:var(--ink); text-decoration:none; letter-spacing:0.05em;
+    }
+    #mobile-nav a:hover { color:var(--accent); }
+    #mobile-lang {
+      font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.15em;
+      text-transform:uppercase; background:none; border:1px solid var(--rule);
+      color:var(--ink); padding:8px 20px; margin-top:0.8rem; cursor:pointer;
+    }
+
+    /* ─── Mobile top bar ────────────────────────────────── */
+    #top-bar {
+      display:none; position:fixed; top:0; left:0; right:0;
+      height:56px; background:var(--bg); z-index:900;
+      align-items:center; padding:0 1.4rem;
+      border-bottom:1px solid var(--rule);
+    }
+    #top-bar .bar-name {
+      font-family:var(--font-mono); font-size:0.75rem;
+      letter-spacing:0.14em; text-transform:uppercase; color:var(--ink);
+    }
+
+    /* ─── Main content wrapper ──────────────────────────── */
+    #main {
+      margin-left: var(--nav-w);
+      min-height:100vh;
+    }
+
+    /* ─── Page-transition overlay ───────────────────────── */
+    #page-veil {
+      position:fixed; inset:0; background:var(--bg);
+      z-index:8000; pointer-events:none;
+      opacity:0; transition:opacity .35s ease;
+    }
+    #page-veil.show { opacity:1; }
+
+    /* ─── Section shared ────────────────────────────────── */
+    .section-inner {
+      max-width: var(--max-w);
+      margin:0 auto;
+      padding: var(--section-gap) 4rem;
+    }
+    hr.rule { border:none; border-top:1px solid var(--rule); margin:2.8rem 0; }
+
+    .section-eyebrow {
+      display:flex; align-items:baseline; gap:1rem;
+      margin-bottom:3.5rem;
+    }
+    .eyebrow-num {
+      font-family:var(--font-mono); font-size:0.65rem;
+      color:var(--gold); letter-spacing:0.1em;
+    }
+    .eyebrow-en {
+      font-family:var(--font-mono); font-size:0.65rem;
+      letter-spacing:0.18em; text-transform:uppercase; color:var(--ink);
+    }
+    .eyebrow-ja {
+      font-family:var(--font-display); font-style:italic;
+      font-size:0.85rem; color:var(--ink-soft);
+    }
+
+    /* scroll reveal */
+    .reveal {
+      opacity:0; transform:translateY(28px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible { opacity:1; transform:none; }
+
+    /* ─── Hero ──────────────────────────────────────────── */
+    #hero {
+      height:100vh; min-height:600px;
+      display:flex; flex-direction:column; justify-content:center;
+      padding: 0 4rem;
+      position:relative; overflow:hidden;
+    }
+    .hero-sup {
+      font-family:var(--font-mono); font-size:0.65rem;
+      letter-spacing:0.3em; text-transform:uppercase;
+      color:var(--ink-soft); margin-bottom:3.2rem;
+      opacity:0; transform:translateY(16px);
+      animation: fadeUp .6s ease .4s forwards;
+    }
+    .hero-kanji {
+      font-family:var(--font-display); font-weight:300;
+      font-size:clamp(4rem,10vw,7rem); line-height:0.92;
+      letter-spacing:0.04em; color:var(--ink);
+    }
+    .hero-kanji .char {
+      display:inline-block;
+      opacity:0; transform:translateY(20px);
+    }
+    .hero-latin {
+      font-family:var(--font-display); font-style:italic; font-weight:300;
+      font-size:clamp(2.6rem,6.5vw,5rem); line-height:1;
+      color:var(--accent); margin-top:0.5rem;
+      opacity:0; transform:translateY(16px);
+      animation: fadeUp .7s ease 1.2s forwards;
+    }
+    .hero-right {
+      position:absolute; right:4rem; top:50%;
+      transform:translateY(-50%) rotate(90deg);
+      transform-origin:center center;
+      font-family:var(--font-mono); font-size:0.6rem;
+      letter-spacing:0.22em; text-transform:uppercase;
+      color:var(--ink-soft); white-space:nowrap;
+      opacity:0; animation: fadeIn .6s ease 1.4s forwards;
+    }
+    .hero-right::before {
+      content:''; display:inline-block;
+      width:32px; height:1px; background:var(--rule);
+      vertical-align:middle; margin-right:1rem;
+    }
+    .hero-bottom {
+      position:absolute; bottom:3rem; left:4rem; right:4rem;
+      display:flex; justify-content:space-between; align-items:flex-end;
+      opacity:0; animation: fadeIn .6s ease 1.6s forwards;
+    }
+    .hero-scroll {
+      display:flex; align-items:center; gap:1rem;
+      font-family:var(--font-mono); font-size:0.6rem;
+      letter-spacing:0.2em; text-transform:uppercase; color:var(--ink-soft);
+    }
+    .hero-scroll-line {
+      display:inline-block; width:1px; height:40px;
+      background:var(--ink-soft);
+      animation: scrollLine 2s ease-in-out 2s infinite;
+      transform-origin:top center;
+    }
+    .hero-coords {
+      font-family:var(--font-mono); font-size:0.6rem;
+      letter-spacing:0.15em; color:var(--ink-soft);
+    }
+    @keyframes fadeUp {
+      to { opacity:1; transform:none; }
+    }
+    @keyframes fadeIn {
+      to { opacity:1; }
+    }
+    @keyframes scrollLine {
+      0%,100% { transform:scaleY(1); opacity:1; }
+      50% { transform:scaleY(0.3); opacity:0.4; }
+    }
+
+    /* ─── About ─────────────────────────────────────────── */
+    #about { border-top:1px solid var(--rule); }
+    .about-pull {
+      font-family:var(--font-display); font-style:italic; font-weight:300;
+      font-size:clamp(1.6rem,3.2vw,2.4rem); line-height:1.25;
+      color:var(--accent); margin-bottom:2.8rem;
+      max-width:760px;
+    }
+    .about-body {
+      display:grid; grid-template-columns:1fr 1fr; gap:3rem;
+      margin-bottom:2.8rem;
+    }
+    .about-body p { font-size:0.9rem; line-height:1.85; color:var(--ink-soft); }
+    .kw-row {
+      display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center;
+      margin-top:0.8rem;
+    }
+    .kw-label {
+      font-family:var(--font-mono); font-size:0.6rem;
+      letter-spacing:0.18em; text-transform:uppercase;
+      color:var(--ink-soft); margin-right:0.4rem;
+    }
+    .kw {
+      font-family:var(--font-mono); font-size:0.62rem;
+      letter-spacing:0.1em; border:1px solid var(--rule);
+      padding:3px 10px; border-radius:2px; color:var(--ink-soft);
+      transition: background .2s, color .2s, border-color .2s;
+    }
+    .kw:hover { background:var(--accent); color:var(--bg); border-color:var(--accent); }
+    .about-meta-row {
+      display:grid; grid-template-columns:repeat(4,1fr); gap:2rem;
+      margin-top:3rem; padding-top:2.5rem; border-top:1px solid var(--rule);
+    }
+    .meta-cell-label {
+      font-family:var(--font-mono); font-size:0.58rem;
+      letter-spacing:0.16em; text-transform:uppercase;
+      color:var(--gold); display:block; margin-bottom:0.5rem;
+    }
+    .meta-cell-val {
+      font-size:0.82rem; line-height:1.5; color:var(--ink);
+    }
+
+    /* ─── Timeline ──────────────────────────────────────── */
+    #history { border-top:1px solid var(--rule); }
+    .timeline-h2 {
+      font-family:var(--font-display); font-weight:300;
+      font-size:clamp(1.8rem,3vw,2.6rem);
+      margin-bottom:4rem; letter-spacing:0.03em;
+    }
+    .timeline { position:relative; }
+    .timeline::before {
+      content:''; position:absolute; left:50%; top:0; bottom:0;
+      width:1px; background:var(--rule); transform:translateX(-50%);
+    }
+    .tl-item {
+      display:grid; grid-template-columns:1fr 1fr;
+      gap:0; margin-bottom:3rem; position:relative;
+    }
+    .tl-item:nth-child(odd)  .tl-content { grid-column:1; padding-right:3.5rem; text-align:right; }
+    .tl-item:nth-child(odd)  .tl-spacer  { grid-column:2; }
+    .tl-item:nth-child(even) .tl-spacer  { grid-column:1; }
+    .tl-item:nth-child(even) .tl-content { grid-column:2; padding-left:3.5rem; }
+    .tl-dot {
+      position:absolute; left:50%; top:0.35rem;
+      width:8px; height:8px; border-radius:50%;
+      background:var(--bg); border:1.5px solid var(--accent);
+      transform:translateX(-50%); z-index:1;
+    }
+    .tl-year {
+      font-family:var(--font-mono); font-size:0.65rem;
+      letter-spacing:0.12em; color:var(--gold);
+      display:block; margin-bottom:0.4rem;
+    }
+    .tl-title {
+      font-family:var(--font-display); font-weight:300;
+      font-size:1.25rem; line-height:1.25; margin-bottom:0.4rem;
+    }
+    .tl-formerly {
+      font-family:var(--font-mono); font-size:0.58rem;
+      letter-spacing:0.08em; color:var(--ink-soft);
+      display:block; margin-top:2px;
+    }
+    .tl-detail {
+      font-size:0.82rem; color:var(--ink-soft); line-height:1.5;
+    }
+    .tl-nl {
+      background:rgba(43,58,92,0.05);
+      border-radius:4px; padding:1rem 1.2rem; margin:-0.5rem;
+    }
+
+    /* ─── Research cards ────────────────────────────────── */
+    #research { border-top:1px solid var(--rule); }
+    .research-grid {
+      display:grid; grid-template-columns:repeat(2,1fr); gap:1.5rem;
+      margin-bottom:2.5rem;
+    }
+    .r-card {
+      background:#fff; padding:2.4rem 2rem 2rem;
+      position:relative; overflow:hidden;
+      border-bottom:3px solid transparent;
+      transition: transform .3s, box-shadow .3s, border-color .3s;
+      cursor:none;
+    }
+    .r-card::before {
+      content:''; position:absolute; inset:0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events:none;
+    }
+    .r-card:hover {
+      transform:translateY(-4px);
+      box-shadow:0 12px 40px rgba(17,16,16,0.09);
+      border-bottom-color:var(--accent);
+    }
+    .r-num {
+      font-family:var(--font-display); font-weight:300;
+      font-size:4.5rem; line-height:1;
+      color:rgba(43,58,92,0.07); position:absolute;
+      top:0.8rem; right:1.5rem; pointer-events:none;
+    }
+    .r-title {
+      font-family:var(--font-display); font-weight:400;
+      font-size:1.5rem; line-height:1.2;
+      margin-bottom:0.4rem; position:relative; z-index:1;
+    }
+    .r-subtitle {
+      font-family:var(--font-mono); font-size:0.62rem;
+      letter-spacing:0.12em; color:var(--gold);
+      display:block; margin-bottom:1rem;
+    }
+    .r-body { font-size:0.84rem; color:var(--ink-soft); line-height:1.75; }
+
+    .current-focus {
+      background:var(--accent); color:var(--bg);
+      padding:1.1rem 2.5rem;
+      display:flex; align-items:center; gap:2rem; flex-wrap:wrap;
+    }
+    .cf-label {
+      font-family:var(--font-mono); font-size:0.6rem;
+      letter-spacing:0.2em; text-transform:uppercase;
+      opacity:0.6; white-space:nowrap;
+    }
+    .cf-text {
+      font-family:var(--font-mono); font-size:0.72rem;
+      letter-spacing:0.08em; opacity:0.9;
+    }
+
+    /* ─── Awards ────────────────────────────────────────── */
+    #awards { border-top:1px solid var(--rule); }
+    .award-list { list-style:none; }
+    .award-row {
+      display:grid; grid-template-columns:80px 1fr;
+      gap:2.5rem; padding:2rem 0;
+      border-bottom:1px solid var(--rule);
+      align-items:start;
+    }
+    .award-yr {
+      font-family:var(--font-mono); font-size:0.65rem;
+      color:var(--gold); letter-spacing:0.1em;
+      padding-top:0.35rem; text-align:right;
+    }
+    .award-name {
+      font-family:var(--font-display); font-weight:400;
+      font-size:1.3rem; line-height:1.2; margin-bottom:0.35rem;
+    }
+    .award-name a {
+      color:inherit; text-decoration:none;
+      border-bottom:1px solid currentColor;
+      transition: color .2s;
+    }
+    .award-name a:hover { color:var(--accent); }
+    .award-org {
+      font-family:var(--font-mono); font-size:0.65rem;
+      letter-spacing:0.08em; color:var(--ink-soft);
+      display:block; margin-bottom:0.5rem;
+    }
+    .award-desc { font-size:0.82rem; color:var(--ink-soft); line-height:1.65; }
+    .award-link {
+      font-family:var(--font-mono); font-size:0.65rem;
+      letter-spacing:0.1em; color:var(--accent);
+      text-decoration:none; display:inline-block; margin-top:0.5rem;
+      transition: opacity .2s;
+    }
+    .award-link:hover { opacity:0.6; }
+    .award-sub { list-style:none; margin-top:0.8rem; }
+    .award-sub li {
+      font-family:var(--font-mono); font-size:0.65rem;
+      color:var(--ink-soft); padding:0.25rem 0;
+      border-bottom:1px solid var(--rule);
+      padding-left:1rem;
+    }
+    .award-sub li::before { content:'—'; margin-right:0.5rem; color:var(--gold); }
+
+    /* ─── Skills ────────────────────────────────────────── */
+    #skills { border-top:1px solid var(--rule); }
+    .skills-cols {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:3rem;
+      margin-bottom:3rem;
+    }
+    .skill-col h4 {
+      font-family:var(--font-mono); font-size:0.62rem;
+      letter-spacing:0.16em; text-transform:uppercase;
+      color:var(--ink-soft); margin-bottom:1.2rem;
+      padding-bottom:0.6rem; border-bottom:1px solid var(--rule);
+    }
+    .skill-pills { display:flex; flex-wrap:wrap; gap:0.5rem; }
+    .pill {
+      font-family:var(--font-mono); font-size:0.62rem;
+      letter-spacing:0.08em; border:1px solid var(--rule);
+      padding:4px 11px; border-radius:2px; color:var(--ink-soft);
+      transition: background .2s, color .2s, border-color .2s; cursor:none;
+    }
+    .pill:hover { background:var(--accent); color:var(--bg); border-color:var(--accent); }
+    .lang-row {
+      padding-top:2rem; border-top:1px solid var(--rule);
+    }
+    .lang-row h4 {
+      font-family:var(--font-mono); font-size:0.62rem;
+      letter-spacing:0.16em; text-transform:uppercase;
+      color:var(--ink-soft); margin-bottom:1rem;
+    }
+
+    /* ─── Activities ────────────────────────────────────── */
+    #activities { border-top:1px solid var(--rule); }
+    .act-group { position:relative; margin-bottom:3.5rem; }
+    .act-big-year {
+      font-family:var(--font-display); font-weight:300;
+      font-size:clamp(4rem,8vw,6rem); line-height:1;
+      color:rgba(17,16,16,0.05); position:absolute;
+      top:-0.5rem; left:-0.5rem; pointer-events:none;
+      user-select:none; letter-spacing:0.02em;
+    }
+    .act-list {
+      list-style:none;
+      padding-left:2rem;
+      border-left:1px solid var(--rule);
+    }
+    .act-list li {
+      font-family:var(--font-mono); font-size:0.72rem;
+      letter-spacing:0.04em; line-height:1.7;
+      color:var(--ink-soft); padding:0.5rem 0;
+      border-bottom:1px solid var(--rule);
+    }
+    .act-list li:last-child { border-bottom:none; }
+    .act-link {
+      font-family:var(--font-mono); font-size:0.65rem;
+      color:var(--accent); text-decoration:none;
+      margin-left:0.5rem; transition:opacity .2s;
+    }
+    .act-link:hover { opacity:0.6; }
+
+    /* ─── Contact ───────────────────────────────────────── */
+    #contact {
+      background:var(--ink); color:var(--bg);
+      border-top:none;
+    }
+    #contact .section-inner { padding-top: var(--section-gap); padding-bottom: var(--section-gap); }
+    #contact .eyebrow-en,
+    #contact .eyebrow-ja { color:rgba(245,243,239,0.4); }
+    #contact .eyebrow-num { color:var(--gold); }
+    .contact-headline {
+      font-family:var(--font-display); font-style:italic; font-weight:300;
+      font-size:clamp(2.8rem,6vw,5rem); line-height:1.05;
+      color:var(--bg); margin-bottom:0.8rem;
+    }
+    .contact-sub {
+      font-family:var(--font-mono); font-size:0.7rem;
+      letter-spacing:0.08em; color:rgba(245,243,239,0.45);
+      margin-bottom:4rem;
+    }
+    .contact-cols { display:grid; grid-template-columns:1fr 1fr; gap:5rem; }
+    .contact-links-list { list-style:none; }
+    .contact-links-list li { margin-bottom:0.2rem; }
+    .contact-links-list a {
+      font-family:var(--font-display); font-size:1.7rem; font-weight:300;
+      color:var(--bg); text-decoration:none; display:inline-block;
+      position:relative; padding-bottom:2px;
+      transition: color .25s;
+    }
+    .contact-links-list a::after {
+      content:''; position:absolute; bottom:0; left:0;
+      width:0; height:1px; background:var(--gold);
+      transition:width .3s ease;
+    }
+    .contact-links-list a:hover { color:var(--gold); }
+    .contact-links-list a:hover::after { width:100%; }
+    .contact-type-label {
+      font-family:var(--font-mono); font-size:0.58rem;
+      letter-spacing:0.15em; text-transform:uppercase;
+      color:rgba(245,243,239,0.35); display:block;
+      margin-top:0.6rem; margin-bottom:0.1rem;
+    }
+
+    /* contact form */
+    .contact-form { display:flex; flex-direction:column; gap:1.8rem; }
+    .form-group { position:relative; }
+    .form-group label {
+      display:block; font-family:var(--font-mono); font-size:0.6rem;
+      letter-spacing:0.15em; text-transform:uppercase;
+      color:rgba(245,243,239,0.4); margin-bottom:0.5rem;
+      transition: color .2s;
+    }
+    .form-group:focus-within label { color:var(--gold); }
+    .form-group input,
+    .form-group textarea {
+      width:100%; background:transparent;
+      border:none; border-bottom:1px solid rgba(245,243,239,0.2);
+      color:var(--bg); font-family:var(--font-body); font-size:0.9rem;
+      padding:0.5rem 0; outline:none;
+      transition: border-color .2s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus { border-bottom-color:var(--gold); }
+    .form-group textarea { resize:vertical; min-height:100px; }
+    .form-submit {
+      font-family:var(--font-display); font-style:italic;
+      font-size:1.1rem; font-weight:300;
+      background:var(--accent); color:var(--bg);
+      border:none; padding:1rem 2rem; cursor:none;
+      transition: background .25s, color .25s;
+      letter-spacing:0.05em;
+    }
+    .form-submit:hover { background:var(--gold); color:var(--ink); }
+
+    /* footer */
+    #site-footer {
+      background:var(--ink); color:rgba(245,243,239,0.25);
+      text-align:center; padding:2rem;
+      border-top:1px solid rgba(245,243,239,0.08);
+      font-family:var(--font-mono); font-size:0.62rem;
+      letter-spacing:0.15em;
+    }
+
+    /* ─── Responsive ────────────────────────────────────── */
+    @media (max-width:1023px) {
+      body { cursor:auto; }
+      .cursor { display:none; }
+      #side-nav { display:none; }
+      #hamburger, #top-bar { display:flex; }
+      #main { margin-left:0; padding-top:56px; }
+      .section-inner { padding:80px 1.8rem; }
+      --section-gap: 80px;
+      .timeline::before { left:0; }
+      .tl-item { grid-template-columns:1fr; }
+      .tl-item:nth-child(odd)  .tl-content,
+      .tl-item:nth-child(even) .tl-content {
+        grid-column:1; padding-left:2rem; padding-right:0; text-align:left;
+      }
+      .tl-item .tl-spacer { display:none; }
+      .tl-dot { left:0; transform:none; }
+      .research-grid { grid-template-columns:1fr; }
+      .about-body { grid-template-columns:1fr; gap:1.5rem; }
+      .about-meta-row { grid-template-columns:repeat(2,1fr); }
+      .skills-cols { grid-template-columns:1fr; gap:2rem; }
+      .contact-cols { grid-template-columns:1fr; gap:3rem; }
+      #hero { padding:0 1.8rem; }
+      .hero-right { display:none; }
+      .hero-bottom { left:1.8rem; right:1.8rem; }
+    }
+    @media (max-width:767px) {
+      .hero-kanji { font-size:clamp(3rem,14vw,4.5rem); }
+      .hero-latin { font-size:clamp(2rem,10vw,3rem); }
+      .about-meta-row { grid-template-columns:1fr 1fr; }
+      .award-row { grid-template-columns:60px 1fr; gap:1.2rem; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- Splash Screen -->
-<div id="splash">
-  <div id="splash-name">SHIN SUZUKI</div>
+<!-- Progress bar -->
+<div id="progress"></div>
+
+<!-- Page veil -->
+<div id="page-veil"></div>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+
+<!-- ─── Sidebar nav ──────────────────────────────────────── -->
+<nav id="side-nav" aria-label="Main navigation">
+  <a href="#hero" class="nav-monogram">S · S</a>
+  <ul class="nav-links">
+    <li>
+      <a href="#about" class="nav-link">
+        <span class="nav-en">About</span>
+        <span class="nav-ja">概要</span>
+      </a>
+    </li>
+    <li>
+      <a href="#history" class="nav-link">
+        <span class="nav-en">History</span>
+        <span class="nav-ja">経歴</span>
+      </a>
+    </li>
+    <li>
+      <a href="#research" class="nav-link">
+        <span class="nav-en">Research</span>
+        <span class="nav-ja">研究</span>
+      </a>
+    </li>
+    <li>
+      <a href="#awards" class="nav-link">
+        <span class="nav-en">Awards</span>
+        <span class="nav-ja">受賞</span>
+      </a>
+    </li>
+    <li>
+      <a href="#skills" class="nav-link">
+        <span class="nav-en">Skills</span>
+        <span class="nav-ja">スキル</span>
+      </a>
+    </li>
+    <li>
+      <a href="#activities" class="nav-link">
+        <span class="nav-en">Activities</span>
+        <span class="nav-ja">活動</span>
+      </a>
+    </li>
+    <li>
+      <a href="works.html" class="nav-link">
+        <span class="nav-en">Works <span class="nav-works-arrow">↗</span></span>
+        <span class="nav-ja">作品</span>
+      </a>
+    </li>
+    <li>
+      <a href="#contact" class="nav-link">
+        <span class="nav-en">Contact</span>
+        <span class="nav-ja">連絡先</span>
+      </a>
+    </li>
+  </ul>
+  <button id="nav-lang" aria-label="Toggle language">日本語</button>
+</nav>
+
+<!-- Mobile top bar -->
+<div id="top-bar" aria-hidden="true">
+  <span class="bar-name">Shin SUZUKI</span>
 </div>
 
-<style>
-  #splash {
-    position: fixed;
-    inset: 0;
-    background-color: #1a1a1a;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    opacity: 1;
-    transition: opacity 1s ease;
-  }
-  #splash.fade-out {
-    opacity: 0;
-    pointer-events: none;
-  }
-  #splash-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: clamp(2rem, 8vw, 5rem);
-    letter-spacing: 0.3em;
-    color: #f5f0eb;
-    opacity: 0;
-    transition: opacity 1.4s ease;
-  }
-  #splash-name.visible {
-    opacity: 1;
-  }
-  body.splash-active {
-    overflow: hidden;
-  }
-</style>
+<!-- Hamburger -->
+<button id="hamburger" aria-label="Open menu" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
 
-<script>
-  (function () {
-    document.body.classList.add('splash-active');
-    const splash = document.getElementById('splash');
-    const name = document.getElementById('splash-name');
+<!-- Mobile nav overlay -->
+<nav id="mobile-nav" aria-label="Mobile navigation">
+  <a href="#about"      onclick="closeMobile()"><span class="en">About</span><span class="ja" style="display:none">概要</span></a>
+  <a href="#history"    onclick="closeMobile()"><span class="en">History</span><span class="ja" style="display:none">経歴</span></a>
+  <a href="#research"   onclick="closeMobile()"><span class="en">Research</span><span class="ja" style="display:none">研究</span></a>
+  <a href="#awards"     onclick="closeMobile()"><span class="en">Awards</span><span class="ja" style="display:none">受賞</span></a>
+  <a href="#skills"     onclick="closeMobile()">Skills</a>
+  <a href="#activities" onclick="closeMobile()"><span class="en">Activities</span><span class="ja" style="display:none">活動</span></a>
+  <a href="works.html">Works ↗</a>
+  <a href="#contact"    onclick="closeMobile()"><span class="en">Contact</span><span class="ja" style="display:none">連絡先</span></a>
+  <button id="mobile-lang" onclick="toggleLangMobile()">日本語</button>
+</nav>
 
-    setTimeout(() => { name.classList.add('visible'); }, 300);
-    setTimeout(() => {
-      splash.classList.add('fade-out');
-      document.body.classList.remove('splash-active');
-    }, 2400);
-    setTimeout(() => { splash.remove(); }, 3500);
-  })();
-</script>
-
-  <!-- Navigation -->
-  <nav>
-    <div class="nav-name">Shin SUZUKI</div>
-    <ul>
-      <li><a href="#about"><span class="en">About</span><span class="ja">概要</span></a></li>
-      <li><a href="#history"><span class="en">History</span><span class="ja">経歴</span></a></li>
-      <li><a href="#research"><span class="en">Research</span><span class="ja">研究</span></a></li>
-      <li><a href="#awards"><span class="en">Awards</span><span class="ja">受賞</span></a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#activities"><span class="en">Activities</span><span class="ja">活動</span></a></li>
-      <li><a href="works.html"><span class="en">Works</span><span class="ja">作品</span></a></li>
-      <li><a href="#contact"><span class="en">Contact</span><span class="ja">連絡先</span></a></li>
-    </ul>
-    <button id="lang-toggle" onclick="toggleLang()">日本語</button>
-  </nav>
+<!-- ─── Main ─────────────────────────────────────────────── -->
+<div id="main">
 
   <!-- Hero -->
-  <section id="hero">
-    <div class="hero-content">
-      <p class="hero-label">
-        <span class="en">Doctoral Candidate</span>
-        <span class="ja">博士課程</span>
-      </p>
-      <h1>鈴木 真<br><span>Shin SUZUKI</span></h1>
-      <p class="hero-affiliation">
-        <span class="en">
-          Institute of Science Tokyo<br>
-          School of Environment and Society<br>
-          Department of Architecture — Ryo Murata Lab
-        </span>
-        <span class="ja">
-          東京科学大学 環境・社会理工学院<br>
-          建築学系 — 村田涼研究室 博士課程
-        </span>
-      </p>
-      <a href="#about" class="hero-cta">
-        <span class="en">View Profile</span>
-        <span class="ja">プロフィール</span>
-      </a>
+  <section id="hero" aria-label="Hero">
+    <p class="hero-sup">Architect · Researcher · Tokyo</p>
+
+    <div class="hero-kanji" aria-label="鈴木 真">
+      <span class="char" style="animation:fadeUp .5s ease .8s forwards">鈴</span><span class="char" style="animation:fadeUp .5s ease .92s forwards">木</span><span class="char" style="animation:fadeUp .5s ease 1.04s forwards"> </span><span class="char" style="animation:fadeUp .5s ease 1.1s forwards">真</span>
+    </div>
+    <p class="hero-latin">Shin SUZUKI</p>
+
+    <div class="hero-right" aria-hidden="true">Institute of Science Tokyo &thinsp;—&thinsp; Doctoral Candidate</div>
+
+    <div class="hero-bottom" aria-hidden="true">
+      <div class="hero-scroll">
+        <span class="hero-scroll-line"></span>
+        Scroll
+      </div>
+      <span class="hero-coords">35°36′N &nbsp;139°41′E · Tokyo</span>
     </div>
   </section>
 
   <!-- About -->
   <section id="about">
-    <div class="container">
-      <div class="section-label"><span class="en">About</span><span class="ja">概要</span></div>
-      <div class="about-grid">
-        <div class="about-text">
-          <h2>
-            <span class="en">Reading the land through its context and history,<br>creating architecture that weaves the future</span>
-            <span class="ja">周辺環境や歴史の文脈から土地を読み解き、<br>未来を紡ぐ建築を作る</span>
-          </h2>
-          <p class="en">
-            I am a doctoral candidate at the Department of Architecture, Tokyo Institute of Science and Technology, under the supervision of Prof. Ryo Murata. My research focuses on collaborative planning processes, spatial governance, and the built environment, with a particular interest in the Dutch context. Through comparative analysis between Japan and the Netherlands, I investigate how participatory and co-design approaches can reshape spatial planning practice in waterfront and heritage contexts.
-          </p>
-          <p class="ja">
-            東京科学大学 環境・社会理工学院 建築学系 村田涼研究室にて博士課程に在籍。
-            水辺空間・産業遺産・都市河川をテーマに、日本とオランダの空間計画における協働プロセスを研究している。
-            2023〜2024年にはオランダ・アムステルダムに在住し、NL architects にてインターンを経験。
-          </p>
-          <div class="keywords">
-            <span class="kw-label">Keywords</span>
-            <div class="kw-list">
-              <span class="en">Architecture</span><span class="ja">建築</span>
-              <span class="en">Urban</span><span class="ja">都市</span>
-              <span class="en">Landscape</span><span class="ja">景観</span>
-              <span class="en">Built Environment</span><span class="ja">構築環境</span>
-              <span class="en">Waterfront</span><span class="ja">水辺</span>
-              <span class="en">Netherlands</span><span class="ja">オランダ</span>
-              <span class="en">Urban River</span><span class="ja">都市河川</span>
-              <span class="en">Sotobori</span><span class="ja">外濠</span>
-            </div>
-          </div>
+    <div class="section-inner">
+      <div class="section-eyebrow reveal">
+        <span class="eyebrow-num">01</span>
+        <span class="eyebrow-en">About</span>
+        <span class="eyebrow-ja">概要</span>
+      </div>
+
+      <p class="about-pull reveal">
+        <span class="en">"Reading the land through its context and history,<br>creating architecture that weaves the future"</span>
+        <span class="ja" style="display:none">"周辺環境や歴史の文脈から土地を読み解き、<br>未来を紡ぐ建築を作る"</span>
+      </p>
+
+      <hr class="rule">
+
+      <div class="about-body reveal">
+        <p class="en">
+          I am a doctoral candidate at the Department of Architecture, Institute of Science Tokyo, under the supervision of Prof. Ryo Murata. My research focuses on collaborative planning processes, spatial governance, and the built environment, with a particular interest in the Dutch context. Through comparative analysis between Japan and the Netherlands, I investigate how participatory and co-design approaches can reshape spatial planning practice in waterfront and heritage contexts.
+        </p>
+        <p class="ja" style="display:none">
+          東京科学大学 環境・社会理工学院 建築学系 村田涼研究室にて博士課程に在籍。
+          水辺空間・産業遺産・都市河川をテーマに、日本とオランダの空間計画における協働プロセスを研究している。
+          2023〜2024年にはオランダ・アムステルダムに在住し、NL architects にてインターンを経験。
+        </p>
+      </div>
+
+      <div class="kw-row reveal">
+        <span class="kw-label">Keywords</span>
+        <span class="kw en">Architecture</span><span class="kw ja" style="display:none">建築</span>
+        <span class="kw en">Urban</span><span class="kw ja" style="display:none">都市</span>
+        <span class="kw en">Landscape</span><span class="kw ja" style="display:none">景観</span>
+        <span class="kw en">Built Environment</span><span class="kw ja" style="display:none">構築環境</span>
+        <span class="kw en">Waterfront</span><span class="kw ja" style="display:none">水辺</span>
+        <span class="kw en">Netherlands</span><span class="kw ja" style="display:none">オランダ</span>
+        <span class="kw en">Urban River</span><span class="kw ja" style="display:none">都市河川</span>
+        <span class="kw en">Sotobori</span><span class="kw ja" style="display:none">外濠</span>
+      </div>
+
+      <div class="about-meta-row reveal">
+        <div>
+          <span class="meta-cell-label"><span class="en">Affiliation</span><span class="ja" style="display:none">所属</span></span>
+          <span class="meta-cell-val"><span class="en">Institute of Science Tokyo<br>Ryo Murata Lab</span><span class="ja" style="display:none">東京科学大学<br>村田涼研究室</span></span>
         </div>
-        <div class="about-meta">
-          <div class="meta-item">
-            <span class="meta-label"><span class="en">Affiliation</span><span class="ja">所属</span></span>
-            <span class="meta-value">
-              <span class="en">Institute of Science Tokyo<br>Ryo Murata Lab</span>
-              <span class="ja">東京科学大学<br>村田涼研究室</span>
-            </span>
-          </div>
-          <div class="meta-item">
-            <span class="meta-label"><span class="en">Degree</span><span class="ja">学位課程</span></span>
-            <span class="meta-value">
-              <span class="en">Doctoral Candidate</span>
-              <span class="ja">博士課程</span>
-            </span>
-          </div>
-          <div class="meta-item">
-            <span class="meta-label"><span class="en">Focus Region</span><span class="ja">対象地域</span></span>
-            <span class="meta-value">Japan / Netherlands</span>
-          </div>
-          <div class="meta-item">
-            <span class="meta-label">Fellowship</span>
-            <span class="meta-value">
-              <span class="en">Science Tokyo SPRING</span>
-              <span class="ja">Science Tokyo SPRING<br>総合知と癒しの次世代フロントランナー育成プログラム</span>
-            </span>
-          </div>
+        <div>
+          <span class="meta-cell-label"><span class="en">Degree</span><span class="ja" style="display:none">学位課程</span></span>
+          <span class="meta-cell-val"><span class="en">Doctoral Candidate</span><span class="ja" style="display:none">博士課程</span></span>
+        </div>
+        <div>
+          <span class="meta-cell-label"><span class="en">Focus Region</span><span class="ja" style="display:none">対象地域</span></span>
+          <span class="meta-cell-val">Japan / Netherlands</span>
+        </div>
+        <div>
+          <span class="meta-cell-label">Fellowship</span>
+          <span class="meta-cell-val"><span class="en">Science Tokyo SPRING</span><span class="ja" style="display:none">Science Tokyo SPRING<br>総合知と癒しの次世代フロントランナー育成プログラム</span></span>
         </div>
       </div>
     </div>
@@ -169,90 +817,112 @@
 
   <!-- History -->
   <section id="history">
-    <div class="container">
-      <div class="section-label"><span class="en">History</span><span class="ja">経歴</span></div>
-      <h2><span class="en">Career & Education</span><span class="ja">学歴・職歴</span></h2>
+    <div class="section-inner">
+      <div class="section-eyebrow reveal">
+        <span class="eyebrow-num">02</span>
+        <span class="eyebrow-en">History</span>
+        <span class="eyebrow-ja">経歴</span>
+      </div>
+      <h2 class="timeline-h2 reveal">
+        <span class="en">Career &amp; Education</span>
+        <span class="ja" style="display:none">学歴・職歴</span>
+      </h2>
+
       <div class="timeline">
 
-        <div class="timeline-item">
-          <div class="timeline-date">2025.10 —</div>
-          <div class="timeline-body">
-            <h3>
-              <span class="en">Institute of Science Tokyo, School of Environment and Society<br><span class="formerly">formerly Tokyo Institute of Technology</span></span>
-              <span class="ja">東京科学大学 環境・社会理工学院</span>
-            </h3>
-            <p>
+        <div class="tl-item reveal">
+          <div class="tl-content">
+            <span class="tl-year">2025.10 —</span>
+            <p class="tl-title">
+              <span class="en">Institute of Science Tokyo<br><span class="tl-formerly">formerly Tokyo Institute of Technology</span></span>
+              <span class="ja" style="display:none">東京科学大学 環境・社会理工学院</span>
+            </p>
+            <p class="tl-detail">
               <span class="en">Ryo Murata Lab — Doctoral Program</span>
-              <span class="ja">村田涼研究室 — 博士課程</span>
+              <span class="ja" style="display:none">村田涼研究室 — 博士課程</span>
             </p>
           </div>
+          <div class="tl-spacer"></div>
+          <div class="tl-dot"></div>
         </div>
 
-        <div class="timeline-item">
-          <div class="timeline-date">2025.10 —</div>
-          <div class="timeline-body">
-            <h3>
-              <span class="en">Japan Science and Technology Agency (JST)</span>
-              <span class="ja">国立研究開発法人 科学技術振興機構（JST）</span>
-            </h3>
-            <p>
+        <div class="tl-item reveal">
+          <div class="tl-spacer"></div>
+          <div class="tl-content">
+            <span class="tl-year">2025.10 —</span>
+            <p class="tl-title">
+              <span class="en">Japan Science and Technology Agency</span>
+              <span class="ja" style="display:none">国立研究開発法人 科学技術振興機構（JST）</span>
+            </p>
+            <p class="tl-detail">
               <span class="en">Science Tokyo SPRING — Next Generation Researcher Program</span>
-              <span class="ja">科学技術振興機構（JST）次世代研究者挑戦的研究プログラム（SPRING）<br>「総合知と癒しの次世代フロントランナー育成プログラム」採択</span>
+              <span class="ja" style="display:none">科学技術振興機構（JST）次世代研究者挑戦的研究プログラム（SPRING）採択</span>
             </p>
           </div>
+          <div class="tl-dot"></div>
         </div>
 
-        <div class="timeline-item">
-          <div class="timeline-date">2024.10 — 2025.09</div>
-          <div class="timeline-body">
-            <h3>
-              <span class="en">Institute of Science Tokyo — Master's Degree<br><span class="formerly">formerly Tokyo Institute of Technology</span></span>
-              <span class="ja">東京科学大学 環境・社会理工学院 修了</span>
-            </h3>
-            <p>
+        <div class="tl-item reveal">
+          <div class="tl-content">
+            <span class="tl-year">2024.10 — 2025.09</span>
+            <p class="tl-title">
+              <span class="en">Institute of Science Tokyo — M.Eng<br><span class="tl-formerly">formerly Tokyo Institute of Technology</span></span>
+              <span class="ja" style="display:none">東京科学大学 環境・社会理工学院 修了</span>
+            </p>
+            <p class="tl-detail">
               <span class="en">Master of Engineering — Ryo Murata Lab</span>
-              <span class="ja">修士（工学） — 村田涼研究室 修士課程</span>
+              <span class="ja" style="display:none">修士（工学） — 村田涼研究室</span>
             </p>
           </div>
+          <div class="tl-spacer"></div>
+          <div class="tl-dot"></div>
         </div>
 
-        <div class="timeline-item">
-          <div class="timeline-date">2023.09 — 2024.08</div>
-          <div class="timeline-body">
-            <h3>NL architects — <span class="en">Internship</span><span class="ja">インターンシップ</span></h3>
-            <p>
-              <span class="en">Based in Amsterdam, Netherlands</span>
-              <span class="ja">オランダ・アムステルダム在住</span>
-            </p>
+        <div class="tl-item reveal">
+          <div class="tl-spacer"></div>
+          <div class="tl-content">
+            <span class="tl-year">2023.09 — 2024.08</span>
+            <div class="tl-nl">
+              <p class="tl-title">NL architects 🇳🇱 — <span class="en">Internship</span><span class="ja" style="display:none">インターンシップ</span></p>
+              <p class="tl-detail">
+                <span class="en">Based in Amsterdam, Netherlands</span>
+                <span class="ja" style="display:none">オランダ・アムステルダム在住</span>
+              </p>
+            </div>
           </div>
+          <div class="tl-dot"></div>
         </div>
 
-        <div class="timeline-item">
-          <div class="timeline-date">2022.04 —</div>
-          <div class="timeline-body">
-            <h3>
-              <span class="en">Tokyo Institute of Technology, School of Environment and Society</span>
-              <span class="ja">東京工業大学 環境・社会理工学院 入学</span>
-            </h3>
-            <p>
+        <div class="tl-item reveal">
+          <div class="tl-content">
+            <span class="tl-year">2022.04 —</span>
+            <p class="tl-title">
+              <span class="en">Tokyo Institute of Technology</span>
+              <span class="ja" style="display:none">東京工業大学 環境・社会理工学院 入学</span>
+            </p>
+            <p class="tl-detail">
               <span class="en">Koichi Yasuda Lab — Master's Program</span>
-              <span class="ja">安田幸一研究室 — 修士課程</span>
+              <span class="ja" style="display:none">安田幸一研究室 — 修士課程</span>
             </p>
           </div>
+          <div class="tl-spacer"></div>
+          <div class="tl-dot"></div>
         </div>
 
-        <div class="timeline-item">
-          <div class="timeline-date">2022.03</div>
-          <div class="timeline-body">
-            <h3>
-              <span class="en">Hosei University, Faculty of Engineering and Design — Bachelor's Degree</span>
-              <span class="ja">法政大学 デザイン工学部 卒業</span>
-            </h3>
-            <p>
+        <div class="tl-item reveal">
+          <div class="tl-spacer"></div>
+          <div class="tl-content">
+            <span class="tl-year">2022.03</span>
+            <p class="tl-title">
+              <span class="en">Hosei University — B.Eng</span>
+              <span class="ja" style="display:none">法政大学 デザイン工学部 卒業</span>
+            </p>
+            <p class="tl-detail">
               <span class="en">Bachelor of Engineering — Tetsuo Kobori Lab</span>
-              <span class="ja">学士（工学） — 小堀哲夫研究室 学士課程</span>
+              <span class="ja" style="display:none">学士（工学） — 小堀哲夫研究室</span>
             </p>
           </div>
+          <div class="tl-dot"></div>
         </div>
 
       </div>
@@ -261,166 +931,203 @@
 
   <!-- Research -->
   <section id="research">
-    <div class="container">
-      <div class="section-label"><span class="en">Research</span><span class="ja">研究</span></div>
-      <h2><span class="en">Research Themes</span><span class="ja">研究テーマ</span></h2>
+    <div class="section-inner">
+      <div class="section-eyebrow reveal">
+        <span class="eyebrow-num">03</span>
+        <span class="eyebrow-en">Research</span>
+        <span class="eyebrow-ja">研究</span>
+      </div>
+
       <div class="research-grid">
-        <div class="research-card">
-          <span class="card-num">01</span>
-          <h3><span class="en">Collaborative Processes</span><span class="ja">協働プロセス</span></h3>
-          <p class="en">Examining participatory and co-design methodologies in architecture and urban planning, and their influence on spatial outcomes.</p>
-          <p class="ja">建築・都市計画における参加型設計・共同設計の手法とその空間的成果への影響を考察する。</p>
+        <div class="r-card reveal">
+          <span class="r-num" aria-hidden="true">01</span>
+          <h3 class="r-title"><span class="en">Collaborative Processes</span><span class="ja" style="display:none">協働プロセス</span></h3>
+          <span class="r-subtitle"><span class="en">Collaborative Processes</span><span class="ja" style="display:none">協働プロセス</span></span>
+          <p class="r-body en">Examining participatory and co-design methodologies in architecture and urban planning, and their influence on spatial outcomes.</p>
+          <p class="r-body ja" style="display:none">建築・都市計画における参加型設計・共同設計の手法とその空間的成果への影響を考察する。</p>
         </div>
-        <div class="research-card">
-          <span class="card-num">02</span>
-          <h3><span class="en">Built Environment</span><span class="ja">構築環境</span></h3>
-          <p class="en">Analyzing the interplay between physical space, governance structures, and social dynamics within the constructed environment.</p>
-          <p class="ja">物理的空間・ガバナンス構造・社会的ダイナミクスの相互作用を、構築環境の文脈で分析する。</p>
+        <div class="r-card reveal">
+          <span class="r-num" aria-hidden="true">02</span>
+          <h3 class="r-title"><span class="en">Built Environment</span><span class="ja" style="display:none">構築環境</span></h3>
+          <span class="r-subtitle"><span class="en">Built Environment</span><span class="ja" style="display:none">構築環境</span></span>
+          <p class="r-body en">Analyzing the interplay between physical space, governance structures, and social dynamics within the constructed environment.</p>
+          <p class="r-body ja" style="display:none">物理的空間・ガバナンス構造・社会的ダイナミクスの相互作用を、構築環境の文脈で分析する。</p>
         </div>
-        <div class="research-card">
-          <span class="card-num">03</span>
-          <h3><span class="en">Spatial Planning</span><span class="ja">空間計画</span></h3>
-          <p class="en">Investigating planning frameworks and policy tools that mediate between design intentions and lived spatial experience.</p>
-          <p class="ja">設計意図と生活空間体験を媒介する計画フレームワーク・政策ツールを探求する。</p>
+        <div class="r-card reveal">
+          <span class="r-num" aria-hidden="true">03</span>
+          <h3 class="r-title"><span class="en">Spatial Planning</span><span class="ja" style="display:none">空間計画</span></h3>
+          <span class="r-subtitle"><span class="en">Spatial Planning</span><span class="ja" style="display:none">空間計画</span></span>
+          <p class="r-body en">Investigating planning frameworks and policy tools that mediate between design intentions and lived spatial experience.</p>
+          <p class="r-body ja" style="display:none">設計意図と生活空間体験を媒介する計画フレームワーク・政策ツールを探求する。</p>
         </div>
-        <div class="research-card">
-          <span class="card-num">04</span>
-          <h3><span class="en">Netherlands Context</span><span class="ja">オランダの都市計画</span></h3>
-          <p class="en">Engaging with Dutch spatial planning traditions as a reference model for collaborative and adaptive planning practices.</p>
-          <p class="ja">オランダの空間計画の伝統を、協働的・適応的な計画実践の参照モデルとして位置づける。</p>
+        <div class="r-card reveal">
+          <span class="r-num" aria-hidden="true">04</span>
+          <h3 class="r-title"><span class="en">Netherlands Context</span><span class="ja" style="display:none">オランダの都市計画</span></h3>
+          <span class="r-subtitle"><span class="en">Netherlands Context</span><span class="ja" style="display:none">オランダの都市計画</span></span>
+          <p class="r-body en">Engaging with Dutch spatial planning traditions as a reference model for collaborative and adaptive planning practices.</p>
+          <p class="r-body ja" style="display:none">オランダの空間計画の伝統を、協働的・適応的な計画実践の参照モデルとして位置づける。</p>
         </div>
+      </div>
+
+      <div class="current-focus reveal">
+        <span class="cf-label">Current Focus</span>
+        <span class="cf-text">Waterfront × Industrial Heritage × London · Amsterdam · Nantes · Hamburg</span>
       </div>
     </div>
   </section>
 
   <!-- Awards -->
   <section id="awards">
-    <div class="container">
-      <div class="section-label"><span class="en">Awards & Grants</span><span class="ja">受賞・採択</span></div>
-      <h2><span class="en">Awards & Grants</span><span class="ja">受賞・採択</span></h2>
-      <div class="awards-list">
+    <div class="section-inner">
+      <div class="section-eyebrow reveal">
+        <span class="eyebrow-num">04</span>
+        <span class="eyebrow-en">Awards &amp; Grants</span>
+        <span class="eyebrow-ja">受賞・採択</span>
+      </div>
 
-        <div class="award-item">
-          <div class="award-year">2026</div>
-          <div class="award-body">
-            <h3>
-              <span class="en">25th Touka Award <a href="https://www.arch.ens.isct.ac.jp/toukakai/Awards/025.html" target="_blank" class="activity-link">→ Detail</a></span>
-              <span class="ja">第25回冬夏賞受賞 <a href="https://www.arch.ens.isct.ac.jp/toukakai/Awards/025.html" target="_blank" class="activity-link">→ 詳細</a></span>
-            </h3>
-            <p>
+      <ul class="award-list">
+
+        <li class="award-row reveal">
+          <div class="award-yr">2026</div>
+          <div>
+            <p class="award-name">
+              <span class="en">25th Touka Award</span>
+              <span class="ja" style="display:none">第25回冬夏賞受賞</span>
+              <a href="https://www.arch.ens.isct.ac.jp/toukakai/Awards/025.html" target="_blank" rel="noopener" class="award-link" aria-label="Detail">→ Detail</a>
+            </p>
+            <p class="award-desc">
               <span class="en">Master's Thesis: "Diversity of Practical Thinking on the Built Environment in Agendas Published by Dutch Government Agencies"</span>
-              <span class="ja">修士論文「オランダの行政機関が発行するアジェンダにみる構築環境への実践的思考の多様性」</span>
+              <span class="ja" style="display:none">修士論文「オランダの行政機関が発行するアジェンダにみる構築環境への実践的思考の多様性」</span>
             </p>
           </div>
-        </div>
+        </li>
 
-        <div class="award-item">
-          <div class="award-year">2026</div>
-          <div class="award-body">
-            <h3>
-              <a href="https://www.maedakksz.or.jp/kenkyu_theme/" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid currentColor;">
+        <li class="award-row reveal">
+          <div class="award-yr">2026</div>
+          <div>
+            <p class="award-name">
+              <a href="https://www.maedakksz.or.jp/kenkyu_theme/" target="_blank" rel="noopener">
                 <span class="en">Maeda Engineering Foundation — Special Research Theme Adopted</span>
-                <span class="ja">前田記念工学振興財団 特別研究テーマ 採択</span>
+                <span class="ja" style="display:none">前田記念工学振興財団 特別研究テーマ 採択</span>
               </a>
-            </h3>
-            <p>
+            </p>
+            <p class="award-desc">
               <span class="en">Suzuki S., Kawamata Y. "Research on conservation and collaborative processes in waterfront spaces and industrial heritage architecture related to water transportation — Through case studies in London, Amsterdam, Nantes, and Hamburg"</span>
-              <span class="ja">鈴木真、川俣悠「水運に関する水辺空間と産業遺産建築の利活用における保存・協働プロセスに関する研究 — ロンドン・アムステルダム・ナント・ハンブルクの事例を通じて —」</span>
+              <span class="ja" style="display:none">鈴木真、川俣悠「水運に関する水辺空間と産業遺産建築の利活用における保存・協働プロセスに関する研究 — ロンドン・アムステルダム・ナント・ハンブルクの事例を通じて —」</span>
             </p>
           </div>
-        </div>
+        </li>
 
-        <div class="award-item">
-          <div class="award-year">2025</div>
-          <div class="award-body">
-            <h3>
+        <li class="award-row reveal">
+          <div class="award-yr">2025</div>
+          <div>
+            <p class="award-name">
               <span class="en">Young Researcher Excellent Presentation Award, Japan Architecture</span>
-              <span class="ja">日本建築学科 若手優秀発表賞</span>
-            </h3>
+              <span class="ja" style="display:none">日本建築学会 若手優秀発表賞</span>
+            </p>
           </div>
-        </div>
+        </li>
 
-        <div class="award-item">
-          <div class="award-year">2025</div>
-          <div class="award-body">
-            <h3>
-              <a href="https://www.maedakksz.or.jp/kenkyu_theme/" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid currentColor;">
+        <li class="award-row reveal">
+          <div class="award-yr">2025</div>
+          <div>
+            <p class="award-name">
+              <a href="https://www.maedakksz.or.jp/kenkyu_theme/" target="_blank" rel="noopener">
                 <span class="en">Maeda Engineering Foundation — Special Research Theme Adopted</span>
-                <span class="ja">前田記念工学振興財団 特別研究テーマ 採択</span>
+                <span class="ja" style="display:none">前田記念工学振興財団 特別研究テーマ 採択</span>
               </a>
-            </h3>
-            <p>
+            </p>
+            <p class="award-desc">
               <span class="en">Suzuki S., Seike Y., Kawamata Y. "Research on value judgment processes in conservation and utilization of railway freight yards in the UK, Italy, and Belgium"</span>
-              <span class="ja">鈴木真、清家悠大、川俣悠「イギリス,イタリア,ベルギーにおける鉄道貨物ヤードの保存活用における価値判断プロセスに関する研究」</span>
+              <span class="ja" style="display:none">鈴木真、清家悠大、川俣悠「イギリス,イタリア,ベルギーにおける鉄道貨物ヤードの保存活用における価値判断プロセスに関する研究」</span>
             </p>
           </div>
-        </div>
+        </li>
 
-        <div class="award-item">
-          <div class="award-year">2023</div>
-          <div class="award-body">
-            <h3>
+        <li class="award-row reveal">
+          <div class="award-yr">2023</div>
+          <div>
+            <p class="award-name">
               <span class="en">Shinjuku Mirai Idea Competition "Noren Mitsuke"</span>
-              <span class="ja">新宿みらいアイディアコンペティション「のれんみつけ」</span>
-            </h3>
-            <p>
+              <span class="ja" style="display:none">新宿みらいアイディアコンペティション「のれんみつけ」</span>
+            </p>
+            <p class="award-desc">
               <span class="en">Excellence Award + Kagurazaka Architecture Prize</span>
-              <span class="ja">優秀賞 ＋ 神楽坂建築賞</span>
+              <span class="ja" style="display:none">優秀賞 ＋ 神楽坂建築賞</span>
             </p>
           </div>
-        </div>
+        </li>
 
-        <div class="award-item">
-          <div class="award-year">2022</div>
-          <div class="award-body">
-            <h3>
+        <li class="award-row reveal">
+          <div class="award-yr">2022</div>
+          <div>
+            <p class="award-name">
               <span class="en">Graduation Design "Funagare Toshi — Water and City from Sotobori"</span>
-              <span class="ja">卒業設計「舟流都市 — 外濠から考える水と都市の向き合い方 —」</span>
-            </h3>
-            <ul>
-              <li><span class="en">Hosei University Special Jury Award</span><span class="ja">法政大学学内 特別審査員賞</span></li>
-              <li><span class="en">Design Review 2022: Selected 70</span><span class="ja">デザインレビュー 2022：70選</span></li>
-              <li><span class="en">National Joint Graduation Exhibition "SOTSU 22": Selected 55</span><span class="ja">全国合同卒業設計展「卒、22」：55選</span></li>
-              <li><span class="en">Historical Space Reconstruction Competition: Selected 17</span><span class="ja">歴史的空間再編コンペティション：17選</span></li>
+              <span class="ja" style="display:none">卒業設計「舟流都市 — 外濠から考える水と都市の向き合い方 —」</span>
+            </p>
+            <ul class="award-sub en">
+              <li>Hosei University Special Jury Award (Ryu Mitarai Prize)</li>
+              <li>Design Review 2022: Selected 70</li>
+              <li>National Joint Graduation Exhibition "SOTSU 22": Selected 55</li>
+              <li>Historical Space Reconstruction Competition: Selected 17</li>
+            </ul>
+            <ul class="award-sub ja" style="display:none">
+              <li>法政大学学内 特別審査員賞（御手洗龍 賞）</li>
+              <li>デザインレビュー 2022：70選</li>
+              <li>全国合同卒業設計展「卒、22」：55選</li>
+              <li>歴史的空間再編コンペティション：17選</li>
             </ul>
           </div>
-        </div>
+        </li>
 
-      </div>
+      </ul>
     </div>
   </section>
 
   <!-- Skills -->
   <section id="skills">
-    <div class="container">
-      <div class="section-label">Skills</div>
-      <h2><span class="en">Tools & Software</span><span class="ja">使用ツール</span></h2>
-      <div class="skills-grid">
-        <div class="skill-group">
-          <h4><span class="en">3D Modeling & Visualization</span><span class="ja">3Dモデリング・可視化</span></h4>
-          <ul>
-            <li>Rhinoceros</li>
-            <li>SketchUp</li>
-            <li>Twinmotion</li>
-          </ul>
+    <div class="section-inner">
+      <div class="section-eyebrow reveal">
+        <span class="eyebrow-num">05</span>
+        <span class="eyebrow-en">Skills</span>
+        <span class="eyebrow-ja">スキル</span>
+      </div>
+
+      <div class="skills-cols">
+        <div class="skill-col reveal">
+          <h4><span class="en">3D Modeling &amp; Visualization</span><span class="ja" style="display:none">3Dモデリング・可視化</span></h4>
+          <div class="skill-pills">
+            <span class="pill">Rhinoceros</span>
+            <span class="pill">SketchUp</span>
+            <span class="pill">Twinmotion</span>
+          </div>
         </div>
-        <div class="skill-group">
-          <h4><span class="en">CAD & Drawing</span><span class="ja">CAD・図面</span></h4>
-          <ul>
-            <li>AutoCAD</li>
-            <li>ArchiCAD</li>
-            <li>Vectorworks</li>
-          </ul>
+        <div class="skill-col reveal">
+          <h4><span class="en">CAD &amp; Drawing</span><span class="ja" style="display:none">CAD・図面</span></h4>
+          <div class="skill-pills">
+            <span class="pill">AutoCAD</span>
+            <span class="pill">ArchiCAD</span>
+            <span class="pill">Vectorworks</span>
+          </div>
         </div>
-        <div class="skill-group">
+        <div class="skill-col reveal">
           <h4>Adobe Creative Suite</h4>
-          <ul>
-            <li>Illustrator</li>
-            <li>Photoshop</li>
-            <li>InDesign</li>
-            <li>Premiere Pro</li>
-            <li>After Effects</li>
-          </ul>
+          <div class="skill-pills">
+            <span class="pill">Illustrator</span>
+            <span class="pill">Photoshop</span>
+            <span class="pill">InDesign</span>
+            <span class="pill">Premiere Pro</span>
+            <span class="pill">After Effects</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lang-row reveal">
+        <h4><span class="en">Languages</span><span class="ja" style="display:none">言語</span></h4>
+        <div class="skill-pills">
+          <span class="pill"><span class="en">Japanese (Native)</span><span class="ja" style="display:none">日本語（母国語）</span></span>
+          <span class="pill"><span class="en">English (Professional)</span><span class="ja" style="display:none">英語（ビジネスレベル）</span></span>
+          <span class="pill"><span class="en">Dutch (Basic)</span><span class="ja" style="display:none">オランダ語（基礎）</span></span>
         </div>
       </div>
     </div>
@@ -428,159 +1135,251 @@
 
   <!-- Activities -->
   <section id="activities">
-    <div class="container">
-      <div class="section-label"><span class="en">Activities</span><span class="ja">活動記録</span></div>
-      <h2><span class="en">Activities</span><span class="ja">活動記録</span></h2>
-      <div class="activities-grid">
-
-        <div class="activity-year-group">
-          <div class="activity-year">2025</div>
-          <ul class="activity-list">
-            <li>International Interdisciplinary Workshop on Inbanuma Swamp, University of Tsukuba</li>
-            <li>
-              <span class="en">11.15 — Tour guide at a public workshop organized by the Tokyo Metropolitan Government's Urban Development Bureau, representing Sotobori Shimin Juku students. Uploaded to the Bureau's official YouTube channel. <a href="https://lnkd.in/gkpcz38M" target="_blank" class="activity-link">▶ Watch</a></span>
-              <span class="ja">11.15 — 東京都都市整備局主催 都民向け勉強会にて、外濠市民塾の学生代表としてツアーガイドを担当。都市整備局公式YouTubeに公開。<a href="https://lnkd.in/gkpcz38M" target="_blank" class="activity-link">▶ 動画を見る</a></span>
-            </li>
-          </ul>
-        </div>
-
-        <div class="activity-year-group">
-          <div class="activity-year">2024</div>
-          <ul class="activity-list">
-            <li><span class="en">Vitra Hanami Party</span><span class="ja">Vitra お花見会</span></li>
-            <li><span class="en">Overseas Internship Talk @Online</span><span class="ja">海外インターントーク ＠オンライン</span></li>
-            <li>
-              <span class="en">10.04 — Symposium "Learning from ADAPTIVE REUSE in the Netherlands" organized by Hokkaido University Graduate School of Engineering (Architectural Design Lab), co-organized by HOH Architecten, JNACA, and NPO OTARU CREATIVE PLUS. Served as consecutive interpreter supporting architect Jarrik Ouburg (HOH Architecten) and contributed to symposium management.</span>
-              <span class="ja">10.04 — 北海道大学大学院工学研究院建築デザイン学研究室主催、HOH Architecten・日蘭建築文化協会（JNACA）・NPO法人 OTARU CREATIVE PLUS 共催シンポジウム「Learning from ADAPTIVE REUSE in the Netherlands」にて、建築家 Jarrik Ouburg（HOH Architecten）の逐次通訳としてサポートし、シンポジウム運営に貢献。</span>
-            </li>
-            <li><span class="en">14th Water Jazz Concert "Kanade" (Executive Committee: Deputy Representative)</span><span class="ja">第14回水上 Jazz コンサート奏（実行委員：代表補佐）</span></li>
-          </ul>
-        </div>
-
-        <div class="activity-year-group">
-          <div class="activity-year">2023</div>
-          <ul class="activity-list">
-            <li><span class="en">Graduation Design Study Session</span><span class="ja">卒業設計対策会</span></li>
-            <li><span class="en">New M2 Hanami Party</span><span class="ja">新M2お花見会</span></li>
-            <li><span class="en">My Career Path @Online</span><span class="ja">私の進路 ＠オンライン</span></li>
-            <li><span class="en">13th Water Jazz Concert "Kanade" (Executive Committee: Deputy Representative)</span><span class="ja">第13回水上 Jazz コンサート奏（実行委員：代表補佐）</span></li>
-          </ul>
-        </div>
-
-        <div class="activity-year-group">
-          <div class="activity-year">2022</div>
-          <ul class="activity-list">
-            <li><span class="en">Entrance Exam Guidance @Online</span><span class="ja">院試ガイダンス ＠オンライン</span></li>
-            <li><span class="en">Hosei University Volunteer Exhibition (Planning: Representative)</span><span class="ja">法政大学有志展（企画運営：代表）</span></li>
-            <li><span class="en">Sotobori Walk (Planning + Tour Guide)</span><span class="ja">外濠散歩（企画運営 ＋ ツアーガイド）</span></li>
-            <li><span class="en">Graduation Thesis Presentation (Planning: Representative)</span><span class="ja">卒論卒制発表会（企画運営：代表）</span></li>
-            <li><span class="en">12th Water Jazz Concert "Kanade" (Executive Committee: Representative)</span><span class="ja">第12回水上 Jazz コンサート奏（実行委員会：代表）</span></li>
-            <li><span class="en">Louis Kahn Lecture Series (Planning & Management)</span><span class="ja">ルイス・カーン連続講演会（企画運営）</span></li>
-            <li><span class="en">JHBS Project Design Competition (Planning: Assistant)</span><span class="ja">JHBS プロジェクトデザインコンペティション（企画運営：補助）</span></li>
-          </ul>
-        </div>
-
-        <div class="activity-year-group">
-          <div class="activity-year">2021</div>
-          <ul class="activity-list">
-            <li><span class="en">Architecture Newcomer Competition Briefing @Online</span><span class="ja">新人戦説明会 ＠オンライン</span></li>
-          </ul>
-        </div>
-
+    <div class="section-inner">
+      <div class="section-eyebrow reveal">
+        <span class="eyebrow-num">06</span>
+        <span class="eyebrow-en">Activities</span>
+        <span class="eyebrow-ja">活動記録</span>
       </div>
+
+      <div class="act-group reveal">
+        <span class="act-big-year" aria-hidden="true">2025</span>
+        <ul class="act-list" style="margin-top:1rem">
+          <li><span class="en">International Interdisciplinary Workshop on Inbanuma Swamp, University of Tsukuba</span><span class="ja" style="display:none">印旛沼国際学際ワークショップ（筑波大学）</span></li>
+          <li>
+            <span class="en">11.15 — Tour guide at a public workshop organized by the Tokyo Metropolitan Government's Urban Development Bureau, representing Sotobori Shimin Juku students. Uploaded to the Bureau's official YouTube channel.</span>
+            <span class="ja" style="display:none">11.15 — 東京都都市整備局主催 都民向け勉強会にて、外濠市民塾の学生代表としてツアーガイドを担当。都市整備局公式YouTubeに公開。</span>
+            <a href="https://lnkd.in/gkpcz38M" target="_blank" class="act-link" aria-label="Watch video">▶ Watch</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="act-group reveal">
+        <span class="act-big-year" aria-hidden="true">2024</span>
+        <ul class="act-list" style="margin-top:1rem">
+          <li><span class="en">Vitra Hanami Party</span><span class="ja" style="display:none">Vitra お花見会</span></li>
+          <li><span class="en">Overseas Internship Talk @Online</span><span class="ja" style="display:none">海外インターントーク ＠オンライン</span></li>
+          <li>
+            <span class="en">10.04 — Symposium "Learning from ADAPTIVE REUSE in the Netherlands" (Hokkaido University). Served as consecutive interpreter for architect Jarrik Ouburg (HOH Architecten) and contributed to symposium management.</span>
+            <span class="ja" style="display:none">10.04 — 北海道大学大学院工学研究院主催、HOH Architecten・JNACA・NPO OTARU CREATIVE PLUS 共催シンポジウム「Learning from ADAPTIVE REUSE in the Netherlands」にて逐次通訳・運営に貢献。</span>
+          </li>
+          <li><span class="en">14th Water Jazz Concert "Kanade" (Executive Committee: Deputy Representative)</span><span class="ja" style="display:none">第14回水上 Jazz コンサート奏（実行委員：代表補佐）</span></li>
+        </ul>
+      </div>
+
+      <div class="act-group reveal">
+        <span class="act-big-year" aria-hidden="true">2023</span>
+        <ul class="act-list" style="margin-top:1rem">
+          <li><span class="en">Graduation Design Study Session</span><span class="ja" style="display:none">卒業設計対策会</span></li>
+          <li><span class="en">New M2 Hanami Party</span><span class="ja" style="display:none">新M2お花見会</span></li>
+          <li><span class="en">My Career Path @Online</span><span class="ja" style="display:none">私の進路 ＠オンライン</span></li>
+          <li><span class="en">13th Water Jazz Concert "Kanade" (Executive Committee: Deputy Representative)</span><span class="ja" style="display:none">第13回水上 Jazz コンサート奏（実行委員：代表補佐）</span></li>
+        </ul>
+      </div>
+
+      <div class="act-group reveal">
+        <span class="act-big-year" aria-hidden="true">2022</span>
+        <ul class="act-list" style="margin-top:1rem">
+          <li><span class="en">Entrance Exam Guidance @Online</span><span class="ja" style="display:none">院試ガイダンス ＠オンライン</span></li>
+          <li><span class="en">Hosei University Volunteer Exhibition (Planning: Representative)</span><span class="ja" style="display:none">法政大学有志展（企画運営：代表）</span></li>
+          <li><span class="en">Sotobori Walk (Planning + Tour Guide)</span><span class="ja" style="display:none">外濠散歩（企画運営 ＋ ツアーガイド）</span></li>
+          <li><span class="en">Graduation Thesis Presentation (Planning: Representative)</span><span class="ja" style="display:none">卒論卒制発表会（企画運営：代表）</span></li>
+          <li><span class="en">12th Water Jazz Concert "Kanade" (Executive Committee: Representative)</span><span class="ja" style="display:none">第12回水上 Jazz コンサート奏（実行委員会：代表）</span></li>
+          <li><span class="en">Louis Kahn Lecture Series (Planning &amp; Management)</span><span class="ja" style="display:none">ルイス・カーン連続講演会（企画運営）</span></li>
+          <li><span class="en">JHBS Project Design Competition (Planning: Assistant)</span><span class="ja" style="display:none">JHBS プロジェクトデザインコンペティション（企画運営：補助）</span></li>
+        </ul>
+      </div>
+
+      <div class="act-group reveal">
+        <span class="act-big-year" aria-hidden="true">2021</span>
+        <ul class="act-list" style="margin-top:1rem">
+          <li><span class="en">Architecture Newcomer Competition Briefing @Online</span><span class="ja" style="display:none">新人戦説明会 ＠オンライン</span></li>
+        </ul>
+      </div>
+
     </div>
   </section>
 
   <!-- Contact -->
   <section id="contact">
-    <div class="container">
-      <div class="section-label"><span class="en">Contact</span><span class="ja">連絡先</span></div>
-      <h2><span class="en">Get in Touch</span><span class="ja">お問い合わせ</span></h2>
-      <div class="contact-grid">
+    <div class="section-inner">
+      <div class="section-eyebrow reveal">
+        <span class="eyebrow-num">07</span>
+        <span class="eyebrow-en" style="color:rgba(245,243,239,0.4)">Contact</span>
+        <span class="eyebrow-ja" style="color:rgba(245,243,239,0.3)">連絡先</span>
+      </div>
 
-        <div class="contact-links">
-          <a href="mailto:suzuki.s.7a2c@m.isct.ac.jp" class="contact-item">
-            <span class="contact-type">Email</span>
-            <span class="contact-value">suzuki.s.7a2c@m.isct.ac.jp</span>
-          </a>
-          <a href="https://www.linkedin.com/in/shin-suzuki-208628331" target="_blank" class="contact-item">
-            <span class="contact-type">LinkedIn</span>
-            <span class="contact-value">Shin SUZUKI</span>
-          </a>
-          <a href="https://www.instagram.com/suzushin0630" target="_blank" class="contact-item">
-            <span class="contact-type">Instagram</span>
-            <span class="contact-value">@suzushin0630</span>
-          </a>
-          <a href="https://twitter.com/suzushin0630" target="_blank" class="contact-item">
-            <span class="contact-type">X / Twitter</span>
-            <span class="contact-value">@suzushin0630</span>
-          </a>
-          <a href="https://github.com/Suzushin0630" target="_blank" class="contact-item">
-            <span class="contact-type">GitHub</span>
-            <span class="contact-value">Suzushin0630</span>
-          </a>
-        </div>
+      <h2 class="contact-headline reveal">
+        <span class="en">Let's collaborate</span>
+        <span class="ja" style="display:none">ともに、つくる。</span>
+      </h2>
+      <p class="contact-sub reveal">
+        <span class="en">建築と研究の交差点で、対話を始めましょう。</span>
+      </p>
 
-        <!--
-          お問い合わせフォームの有効化:
-          1. https://formspree.io にメールアドレスで無料登録
-          2. 新しいフォームを作成し、Form IDを取得
-          3. 下記 action の YOUR_FORM_ID を取得したIDに置き換える
-        -->
-        <form class="contact-form" action="https://formspree.io/f/mwvayoqz" method="POST">
+      <div class="contact-cols">
+        <ul class="contact-links-list reveal" aria-label="Contact links">
+          <li>
+            <span class="contact-type-label">Email</span>
+            <a href="mailto:suzuki.s.7a2c@m.isct.ac.jp" aria-label="Email Shin SUZUKI">suzuki.s.7a2c@m.isct.ac.jp</a>
+          </li>
+          <li>
+            <span class="contact-type-label">LinkedIn</span>
+            <a href="https://www.linkedin.com/in/shin-suzuki-208628331" target="_blank" rel="noopener" aria-label="LinkedIn profile">Shin SUZUKI</a>
+          </li>
+          <li>
+            <span class="contact-type-label">Instagram</span>
+            <a href="https://www.instagram.com/suzushin0630" target="_blank" rel="noopener" aria-label="Instagram">@suzushin0630</a>
+          </li>
+          <li>
+            <span class="contact-type-label">X / Twitter</span>
+            <a href="https://twitter.com/suzushin0630" target="_blank" rel="noopener" aria-label="X / Twitter">@suzushin0630</a>
+          </li>
+          <li>
+            <span class="contact-type-label">GitHub</span>
+            <a href="https://github.com/Suzushin0630" target="_blank" rel="noopener" aria-label="GitHub">Suzushin0630</a>
+          </li>
+        </ul>
+
+        <form class="contact-form reveal" action="https://formspree.io/f/mwvayoqz" method="POST" aria-label="Contact form">
           <div class="form-group">
-            <label for="name"><span class="en">Name</span><span class="ja">お名前</span></label>
-            <input type="text" id="name" name="name" required />
+            <label for="cf-name"><span class="en">Name</span><span class="ja" style="display:none">お名前</span></label>
+            <input type="text" id="cf-name" name="name" required autocomplete="name">
           </div>
           <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required />
+            <label for="cf-email">Email</label>
+            <input type="email" id="cf-email" name="email" required autocomplete="email">
           </div>
           <div class="form-group">
-            <label for="message"><span class="en">Message</span><span class="ja">メッセージ</span></label>
-            <textarea id="message" name="message" rows="5" required></textarea>
+            <label for="cf-msg"><span class="en">Message</span><span class="ja" style="display:none">メッセージ</span></label>
+            <textarea id="cf-msg" name="message" rows="5" required></textarea>
           </div>
-          <button type="submit">
-            <span class="en">Send Message</span>
-            <span class="ja">送信する</span>
+          <button type="submit" class="form-submit">
+            <span class="en">Send Message →</span>
+            <span class="ja" style="display:none">送信する →</span>
           </button>
         </form>
-
       </div>
     </div>
   </section>
 
-  <footer>
-    <p>© 2026 Shin SUZUKI</p>
+  <footer id="site-footer">
+    <span>© 2026 Shin SUZUKI</span>
+    &nbsp;&nbsp;·&nbsp;&nbsp;
+    <span>Tokyo &nbsp;35°36′N &nbsp;139°41′E</span>
   </footer>
 
-  <script>
-    function setLang(isJa) {
-      document.querySelectorAll('.en').forEach(el => {
-        el.style.display = isJa ? 'none' : '';
-      });
-      document.querySelectorAll('.ja').forEach(el => {
-        if (isJa) {
-          el.style.display = el.tagName === 'P' ? 'block' : 'inline';
-        } else {
-          el.style.display = 'none';
-        }
-      });
-      document.getElementById('lang-toggle').textContent = isJa ? 'English' : '日本語';
-    }
+</div><!-- /#main -->
 
-    function toggleLang() {
-      const isJa = !document.body.classList.contains('ja');
-      document.body.classList.toggle('ja', isJa);
-      localStorage.setItem('lang', isJa ? 'ja' : 'en');
-      setLang(isJa);
-    }
+<script>
+(function () {
+  'use strict';
 
-    if (localStorage.getItem('lang') === 'ja') {
-      document.body.classList.add('ja');
-      setLang(true);
-    }
-  </script>
+  /* ── Scroll progress ─────────────────────────────── */
+  const prog = document.getElementById('progress');
+  window.addEventListener('scroll', function () {
+    const p = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+    prog.style.width = Math.min(p * 100, 100) + '%';
+  }, { passive: true });
+
+  /* ── Custom cursor ───────────────────────────────── */
+  const cur = document.getElementById('cursor');
+  if (cur) {
+    document.addEventListener('mousemove', function (e) {
+      cur.style.left = e.clientX + 'px';
+      cur.style.top  = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button, .kw, .pill').forEach(function (el) {
+      el.addEventListener('mouseenter', function () { cur.classList.add('hover'); });
+      el.addEventListener('mouseleave', function () { cur.classList.remove('hover'); });
+    });
+  }
+
+  /* ── Scroll reveal ───────────────────────────────── */
+  const revealEls = document.querySelectorAll('.reveal');
+  const revObs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        revObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(function (el) { revObs.observe(el); });
+
+  /* ── Active nav on scroll ────────────────────────── */
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const secObs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        navLinks.forEach(function (a) { a.classList.remove('active'); });
+        const active = document.querySelector('.nav-link[href="#' + e.target.id + '"]');
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.4 });
+  sections.forEach(function (s) { secObs.observe(s); });
+
+  /* ── Hamburger menu ──────────────────────────────── */
+  const ham     = document.getElementById('hamburger');
+  const mobNav  = document.getElementById('mobile-nav');
+  ham.addEventListener('click', function () {
+    const open = mobNav.classList.toggle('open');
+    ham.classList.toggle('open', open);
+    ham.setAttribute('aria-expanded', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  window.closeMobile = function () {
+    mobNav.classList.remove('open');
+    ham.classList.remove('open');
+    ham.setAttribute('aria-expanded', false);
+    document.body.style.overflow = '';
+  };
+
+  /* ── Language toggle ─────────────────────────────── */
+  var currentLang = localStorage.getItem('lang') || 'en';
+
+  function applyLang(l) {
+    document.querySelectorAll('.en').forEach(function (el) {
+      el.style.display = l === 'ja' ? 'none' : '';
+    });
+    document.querySelectorAll('.ja').forEach(function (el) {
+      if (l === 'ja') {
+        el.style.display = el.tagName === 'P' || el.tagName === 'UL' ? 'block' : 'inline';
+      } else {
+        el.style.display = 'none';
+      }
+    });
+    document.getElementById('nav-lang').textContent  = l === 'ja' ? 'EN' : '日本語';
+    document.getElementById('mobile-lang').textContent = l === 'ja' ? 'EN' : '日本語';
+    document.documentElement.lang = l === 'ja' ? 'ja' : 'en';
+    localStorage.setItem('lang', l);
+    currentLang = l;
+  }
+
+  document.getElementById('nav-lang').addEventListener('click', function () {
+    applyLang(currentLang === 'en' ? 'ja' : 'en');
+  });
+  window.toggleLangMobile = function () {
+    applyLang(currentLang === 'en' ? 'ja' : 'en');
+  };
+
+  applyLang(currentLang);
+
+  /* ── Page transition veil ────────────────────────── */
+  const veil = document.getElementById('page-veil');
+  document.querySelectorAll('a[href="works.html"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      var dest = a.href;
+      veil.classList.add('show');
+      setTimeout(function () { window.location.href = dest; }, 360);
+    });
+  });
+
+})();
+</script>
 
 </body>
 </html>
