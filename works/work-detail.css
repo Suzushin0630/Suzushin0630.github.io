@@ -1,6 +1,6 @@
 /* ─── Design system variables ────────────────────────────── */
 :root {
-  --bg:        #F5F3EF;
+  --bg:        #FAF8F4;
   --ink:       #111010;
   --ink-soft:  #4A4745;
   --accent:    #2B3A5C;
@@ -14,7 +14,7 @@
   --black:      #111010;
   --gray:       #4A4745;
   --light-gray: rgba(17,16,16,0.12);
-  --white:      #F5F3EF;
+  --white:      #FAF8F4;
 }
 
 /* ─── Base ────────────────────────────────────────────────── */
@@ -258,7 +258,7 @@ body::after {
   cursor:pointer; font-family:var(--font-mono); font-weight:300;
   user-select:none; transition:color .2s;
 }
-#lightbox-close:hover { color:#F5F3EF; }
+#lightbox-close:hover { color:#FAF8F4; }
 
 /* ─── Prev / Next nav ─────────────────────────────────────── */
 .work-nav {
