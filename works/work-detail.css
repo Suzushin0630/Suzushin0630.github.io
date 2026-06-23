@@ -60,7 +60,7 @@ body::after {
   border-right:1px solid var(--rule); background:var(--bg);
 }
 .nav-monogram {
-  font-family:'DIN 2014', var(--font-mono); font-weight:300;
+  font-family:'Archivo', var(--font-mono); font-weight:300;
   font-size:0.82rem; letter-spacing:0.22em; text-transform:uppercase;
   color:var(--ink); text-decoration:none; display:block; margin-bottom:3rem; line-height:1;
 }
