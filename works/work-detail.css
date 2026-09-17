@@ -143,7 +143,7 @@ body::after {
 /* ─── Hero ────────────────────────────────────────────────── */
 .work-hero {
   position:relative; width:100%; height:70vh; min-height:400px;
-  overflow:hidden; margin-top:0;
+  overflow:hidden; margin-top:0; z-index:0;
 }
 .work-hero img {
   width:100%; height:130%; object-fit:cover; object-position:center center;
